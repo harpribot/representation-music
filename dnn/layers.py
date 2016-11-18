@@ -21,39 +21,45 @@ class Layers(object):
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
         self.layers[layer_id] = tf.placeholder("float", [None, width])
 
-    def _add_hidden_layer(self, input_layer_id, input_width, output_width, layer_id):
+    def _add_hidden_layer(self, input_layer_id, input_width, output_width, layer_id, scope_id, duplicate=False):
         """
         Adds the hidden layer to the model
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
         :param layer_id: The unique id of the layer. Type=string
+        :param scope_id: The scope id same as the layer with which we want to share the weights
+        :param duplicate: True if this layer is to have shared weights with a layer already present in the self.layers,
+                            else False
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        weights = weight_variable([input_width, output_width])
-        biases = bias_variable([output_width])
-        self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
+        with tf.variable_scope(scope_id) as scope:
+            weights = weight_variable([input_width, output_width])
+            biases = bias_variable([output_width])
+            if duplicate:
+                scope.reuse_variables()
+            self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
 
-    def _add_regularization_layer(self, input_layer_id, layer_id, regulariztion_type='dropout',
+    def _add_regularization_layer(self, input_layer_id, layer_id, regularization_type='dropout',
                                   weights=None, epsilon=None, dropout_ratio=None):
         """
         Adds the regularization layer to the model
         :param input_layer_id: The input layer identifier
         :param layer_id: The unique id of the layer. Type=string
-        :param regulariztion_type: 'dropout' for Dropout and 'batch_norm' for Batch Normalization. Default = 'dropout'
+        :param regularization_type: 'dropout' for Dropout and 'batch_norm' for Batch Normalization. Default = 'dropout'
         :param weights: The weights of the current layer
         :param epsilon: The batch_norm parameter to ensure that division is not by zero when variance of batch = 0
         :param dropout_ratio: The fraction of the layers to be masked.
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        if regulariztion_type == 'dropout':
+        if regularization_type == 'dropout':
             if dropout_ratio:
                 self.layers[layer_id] = dropout_layer(self.layers[input_layer_id], dropout_ratio)
             else:
                 self.layers[layer_id] = dropout_layer(self.layers[input_layer_id])
-        elif regulariztion_type=='batch_norm':
+        elif regularization_type == 'batch_norm':
             assert weights is not None, 'Weights must be provided..'
             if epsilon:
                 self.layers[layer_id] = batch_norm_layer(self.layers[input_layer_id], weights, epsilon)
