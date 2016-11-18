@@ -44,8 +44,8 @@ class LowLevelSharingModel(Layers):
         # Output layer for each task
         for output_id, output_dim in self.output_info:
             print 'Adding Output Layer for Task-' + output_id
-            self._add_output_layer(input_layer_id='layer-4-dropout', input_width=128, output_width=output_dim,
-                                   layer_id='output-' + output_id)
+            self._add_output_layer(input_layer_id='task-' + output_id + '-layer-4-dropout', input_width=128,
+                                   output_width=output_dim, layer_id='output-' + output_id)
 
         # Ground truth layer for each task
         for output_id, output_dim in self.output_info:
