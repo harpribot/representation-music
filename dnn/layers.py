@@ -114,8 +114,7 @@ class Layers(object):
         """
         return layer_id not in self.layers
 
-    def _add_loss_layer(self, layer_id, output_layer_id, 
-        ground_truth_layer_id, loss_type='mse'):
+    def _add_loss_layer(self, layer_id, output_layer_id, ground_truth_layer_id, loss_type='mse'):
         """
         Adds a layer corresponding to the loss function
         :param layer_id: The loss layer identifier
@@ -125,10 +124,8 @@ class Layers(object):
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        assert not self.__layer_verifier(output_layer_id), \
-            'Invalid: Output layer id is invalid.'
-        assert not self.__layer_verifier(ground_truth_layer_id), \
-            'Invalid: Ground truth layer id is invalid.'
+        assert not self.__layer_verifier(output_layer_id), 'Invalid: Output layer id is invalid.'
+        assert not self.__layer_verifier(ground_truth_layer_id), 'Invalid: Ground truth layer id is invalid.'
 
         output = self.layers[output_layer_id]
         ground_truth = self.layers[ground_truth_layer_id]
