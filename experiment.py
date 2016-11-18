@@ -1,5 +1,5 @@
 import tensorflow as tf
-from Models.models import LowestSharingModel
+from Models.models import LowLevelSharingModel
 from dnn.optimizer import Optimizer
 import numpy as np
 from dnn.loss import mse
@@ -7,9 +7,9 @@ from dnn.loss import mse
 LEARNING_RATE = 1e-4
 
 
-class Experiment(LowestSharingModel):
+class Experiment(LowLevelSharingModel):
     def __init__(self, input_info, output_info, input_data, output_labels):
-        LowestSharingModel.__init__(self, input_info, output_info)
+        LowLevelSharingModel.__init__(self, input_info, output_info)
         self.sess = None
         self.input_data = input_data
         self.output_labels = output_labels
