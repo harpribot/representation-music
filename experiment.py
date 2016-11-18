@@ -41,11 +41,9 @@ class Experiment(LowestSharingModel):
 
 
 input_data = np.random.rand(5000)
-labels = {'1':0.5, '2':0.8}
+labels = {'1': 0.5, '2': 0.8}
 input_info = ('input', 5000)
 output_info = [('1', 1), ('2', 1)]
 exp = Experiment(input_info, output_info, input_data, labels)
 exp.initialize_network()
 exp.train()
-
-

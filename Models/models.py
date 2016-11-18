@@ -14,9 +14,9 @@ class LowestSharingModel(Layers):
 
         # First hidden layer
         print 'Adding Hidden Layer 1'
-        self._add_hidden_layer(input_layer_id='input',input_width=self.input_size, output_width=1024,
+        self._add_hidden_layer(input_layer_id='input', input_width=self.input_size, output_width=1024,
                                layer_id='layer-1')
-        self._add_activation_layer(input_layer_id='layer-1',layer_id='layer-1-relu')
+        self._add_activation_layer(input_layer_id='layer-1', layer_id='layer-1-relu')
 
         # Second hidden layer
         print 'Adding Hidden Layer 2'
