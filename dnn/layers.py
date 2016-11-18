@@ -125,8 +125,10 @@ class Layers(object):
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        assert not self.__layer_verifier(layer_id), 'Invalid: Output layer id'
-            'is invalid.'
+        assert not self.__layer_verifier(output_layer_id), \
+            'Invalid: Output layer id is invalid.'
+        assert not self.__layer_verifier(ground_truth_layer_id), \
+            'Invalid: Ground truth layer id is invalid.'
 
         output = self.layers[output_layer_id]
         ground_truth = self.layers[ground_truth_layer_id]
