@@ -35,7 +35,7 @@ class LowLevelSharingModel(Layers):
         for output_id, _ in self.output_info:
             print 'Adding Hidden Layer 4 for Task-' + output_id
             layer_id = 'task-' + output_id + '-layer-4'
-            self._add_hidden_layer(input_layer_id='layer-3-relu', input_width=256, output_width=128,
+            self._add_hidden_layer(input_layer_id='layer-3-dropout', input_width=256, output_width=128,
                                    layer_id=layer_id)
             self._add_activation_layer(input_layer_id=layer_id, layer_id=layer_id + '-relu')
             self._add_regularization_layer(input_layer_id=layer_id + '-relu', layer_id=layer_id + '-dropout',
