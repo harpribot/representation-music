@@ -82,15 +82,21 @@ class Layers(object):
         biases = bias_variable([output_width])
         self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
 
-    def _add_activation_layer(self, input_layer_id, layer_id):
+    def _add_activation_layer(self, input_layer_id, layer_id, activation_type='relu'):
         """
         Adds the activation layer
         :param input_layer_id: The input layer identifier
         :param layer_id: The unique id of the layer. Type=string
+        :param activation_type: 'relu' for RELU and 'leaky-relu' for Leaky RELU. Default = RELU
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        self.layers[layer_id] = relu(self.layers[input_layer_id])
+        if activation_type == 'relu':
+            self.layers[layer_id] = relu(self.layers[input_layer_id])
+        elif activation_type == 'leaky-relu':
+            self.layers[layer_id] = leaky_relu(self.layers[input_layer_id])
+        else:
+            raise ValueError('The type of activation can only be one of ["relu", "leaky-relu"]')
 
     def __layer_verifier(self, layer_id):
         """
