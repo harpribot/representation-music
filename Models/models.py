@@ -52,6 +52,5 @@ class LowestSharingModel(Layers):
         # Adds loss layer
         print 'Adding Loss Layer'
         for output_id, output_dim in self.output_info:
-            self._add_loss_layer(layer_id='loss-' + output_id, output_layer_id=output_id,
+            self._add_loss_layer(layer_id='loss-' + output_id, output_layer_id='output-' + output_id,
                                  ground_truth_layer_id='ground-truth-' + output_id, loss_type='mse')
-
