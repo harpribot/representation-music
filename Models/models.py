@@ -6,7 +6,7 @@ class LowestSharingModel(Layers):
     def __init__(self, input_info, output_info):
         self.input_id, self.input_size = input_info
         self.output_info = output_info
-        Layers.__init__()
+        Layers.__init__(self)
 
     def _create_model(self):
         self._add_input_layer(width=self.input_size, layer_id=self.input_id)
