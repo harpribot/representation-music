@@ -11,19 +11,18 @@ def dropout_layer(input_layer, dropout_ratio=0.5):
     return tf.nn.dropout(input_layer, dropout_ratio)
 
 
-def batch_norm_layer(input_layer, weights, epsilon=1e-5):
+def batch_norm_layer(input_layer, epsilon=1e-5):
     """
     The batch normalization applied to the output of the layer before applying the activation.
-    Note: This layer is internal to the hidden layer,
-            and should be applied to the output of the hidden layer before applying the activation.
-            The input_layer is the input the present hidden layer, the weights are the weights of the hidden layer.
+
+    *** Note - If applying this layer, make sure that previous hidden layer has batch_norm flag = True ***
+
     :param input_layer: The input of the present layer, and the output of the previous layer
-    :param weights: The weights of the present layer
     :param epsilon: The small value added to the denominator to prevent division by 0, when the variance = 0
     :return: The batch normalization output. This output should be applied with the activation
     """
-    z = tf.matmul(input_layer, weights)
-    output_dim = weights.get_shape()[2].value
+    z = input_layer
+    output_dim = input_layer.get_shape()[1].value
     batch_mean, batch_var = tf.nn.moments(z, [0])
     scale = tf.Variable(tf.ones([output_dim]))
     beta = tf.Variable(tf.ones([output_dim]))

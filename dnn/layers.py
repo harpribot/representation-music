@@ -21,24 +21,21 @@ class Layers(object):
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
         self.layers[layer_id] = tf.placeholder("float", [None, width])
 
-    def _add_hidden_layer(self, input_layer_id, input_width, output_width, layer_id, scope_id, duplicate=False):
+    def _add_hidden_layer(self, input_layer_id, input_width, output_width, layer_id, batch_norm=True):
         """
         Adds the hidden layer to the model
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
         :param layer_id: The unique id of the layer. Type=string
-        :param scope_id: The scope id same as the layer with which we want to share the weights
-        :param duplicate: True if this layer is to have shared weights with a layer already present in the self.layers,
-                            else False
         :return: None
         """
         assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        with tf.variable_scope(scope_id) as scope:
-            weights = weight_variable([input_width, output_width])
-            biases = bias_variable([output_width])
-            if duplicate:
-                scope.reuse_variables()
+        weights = weight_variable([input_width, output_width])
+        biases = bias_variable([output_width])
+        if batch_norm:
+            self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights)
+        else:
             self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
 
     def _add_regularization_layer(self, input_layer_id, layer_id, regularization_type='dropout',
@@ -105,3 +102,7 @@ class Layers(object):
         :return: True, if the layer is valid, else False
         """
         return layer_id not in self.layers
+
+    def _add_loss_layer(self, layer_id, loss_type='mse'):
+        # @TODO
+        pass
