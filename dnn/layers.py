@@ -2,6 +2,7 @@ import tensorflow as tf
 from parameters import weight_variable, bias_variable
 from regularization import dropout_layer, batch_norm_layer
 from activation import relu, leaky_relu
+from loss import mse
 
 
 class Layers(object):
@@ -79,6 +80,16 @@ class Layers(object):
         biases = bias_variable([output_width])
         self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
 
+    def _add_ground_truth_layer(self, width, layer_id='ground_truth'):
+        """
+        Adds ground truth layer to the model
+        :param width: The width of the ground truth = dimension of the input
+        :param layer_id: The unique id of the layer. Type=string
+        :return: None
+        """
+        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        self.layers[layer_id] = tf.placeholder("float", [None, width])
+
     def _add_activation_layer(self, input_layer_id, layer_id, activation_type='relu'):
         """
         Adds the activation layer
@@ -103,6 +114,23 @@ class Layers(object):
         """
         return layer_id not in self.layers
 
-    def _add_loss_layer(self, layer_id, loss_type='mse'):
-        # @TODO
-        pass
+    def _add_loss_layer(self, layer_id, output_layer_id, 
+        ground_truth_layer_id, loss_type='mse'):
+        """
+        Adds a layer corresponding to the loss function
+        :param layer_id: The loss layer identifier
+        :param output_layer_id: The output layer identifier
+        :param ground_truth_layer_id: The ground truth layer identifier
+        :param loss_type: 'mse' for MSE
+        :return: None
+        """
+        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        assert not self.__layer_verifier(layer_id), 'Invalid: Output layer id'
+            'is invalid.'
+
+        output = self.layers[output_layer_id]
+        ground_truth = self.layers[ground_truth_layer_id]
+        if loss_type == 'mse':
+            self.layers[layer_id] = mse(ground_truth, output)
+        else:
+            raise ValueError('The type of loss can only be one of ["mse"]')

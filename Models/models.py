@@ -41,7 +41,19 @@ class LowestSharingModel(Layers):
         # Output layer
         print 'Adding Output Layer'
         for output_id, output_dim in self.output_info:
-            self._add_output_layer(input_layer_id='layer-4-dropout', input_width=128,
-                                   output_width=output_dim, layer_id=output_id)
+            self._add_output_layer(input_layer_id='layer-4-dropout',
+                input_width=128, output_width=output_dim, 
+                layer_id='output-' + output_id)
 
+        print 'Adding Ground Truth Layer'
+        for output_id, output_dim in self.output_info:
+            self._add_ground_truth_layer(width=output_dim,
+                layer_id='ground-truth-' + output_id)
+
+        print 'Adding Loss Layer'
+        for output_id, output_dim in self.output_info:
+            self._add_loss_layer(layer_id='loss-' + output_id,
+                output_layer_id=output_id, 
+                ground_truth_layer_id='ground-truth-' + output_id,
+                loss_type='mse')
 
