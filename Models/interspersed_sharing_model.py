@@ -55,7 +55,7 @@ class InterspersedSharingModel(Model):
                                            output_width=256, layer_name='layer-3')
         id_act3 = self.add_activation_layer(input_layer_id=id_hidden3, layer_name='layer-3-relu')
         id_reg3 = self.add_regularization_layer(input_layer_id=id_act3, layer_name='layer-3-dropout',
-                                                 dropout_ratio=0.5)
+                                                dropout_ratio=0.5)
 
         # Fourth hidden layer; incoming weights are not shared
         print 'Adding Hidden Layer 4 for Task-' + task_id
@@ -63,7 +63,7 @@ class InterspersedSharingModel(Model):
                                            output_width=128, layer_name='layer-4')
         id_act4 = self.add_activation_layer(input_layer_id=id_hidden4, layer_name='layer-4-relu')
         id_reg4 = self.add_regularization_layer(input_layer_id=id_act4, layer_name='layer-4-dropout',
-                                                 dropout_ratio=0.5)
+                                                dropout_ratio=0.5)
 
         # Output layer; incoming weights are not shared
         print 'Adding Output Layer for Task-' + task_id

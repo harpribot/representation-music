@@ -35,7 +35,7 @@ class Layers(object):
         return layer_name
 
     def add_hidden_layer(self, input_layer_id, input_width, output_width,
-                          layer_name, batch_norm=True, sharing=False):
+                         layer_name, batch_norm=True, sharing=False):
         """
         Adds the hidden layer to the model
         :param input_layer_id: The input layer identifier
@@ -64,7 +64,7 @@ class Layers(object):
         return layer_id
 
     def add_regularization_layer(self, input_layer_id, layer_name, regularization_type='dropout',
-                                  epsilon=None, dropout_ratio=None):
+                                 epsilon=None, dropout_ratio=None):
         """
         Adds the regularization layer to the model
         :param input_layer_id: The input layer identifier
