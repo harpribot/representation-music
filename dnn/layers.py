@@ -39,14 +39,11 @@ class Layers(object):
         scope = self.__get_scope(layer_name, layer_id, sharing)
         with tf.variable_scope(scope):
             assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-            if self.is_first or not sharing:
-                with tf.variable_scope("hello"):
+
+            reuse = sharing and (not self.is_first)
+            with tf.variable_scope("hello", reuse=reuse):
                     weights = weight_variable([input_width, output_width], "weight")
                     biases = bias_variable([output_width], "bias")
-            if not self.is_first and sharing:
-                with tf.variable_scope("hello", reuse=True):
-                    weights = tf.get_variable("weight",[input_width, output_width])
-                    biases = tf.get_variable("bias", [output_width])
             if batch_norm:
                 self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights)
             else:
@@ -168,11 +165,9 @@ class Layers(object):
 
     def __get_scope(self, layer_name, layer_id, sharing):
         if sharing:
-            scope = layer_name
+            return layer_name
         else:
-            scope = layer_id
-
-        return scope
+            return layer_id
 
     def __get_layer_id(self, layer_name):
         return self.name + layer_name

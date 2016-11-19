@@ -53,13 +53,13 @@ class LowLevelSharingModel(Layers):
         # Second hidden layer which is shared across all tasks
         print 'Adding Hidden Layer 2 for Task-' + output_id
         id_hidden2 = self._add_hidden_layer(input_layer_id=id_act1, input_width=1024,
-                                            output_width=512, layer_name='layer-2')
+                                            output_width=512, layer_name='layer-2', sharing=True)
         id_act2 = self._add_activation_layer(input_layer_id=id_hidden2, layer_name='layer-2-relu')
 
         # Third hidden layer which is shared across all tasks
         print 'Adding Hidden Layer 3 for Task-' + output_id
         id_hidden3 = self._add_hidden_layer(input_layer_id=id_act2, input_width=512,
-                                            output_width=256, layer_name='layer-3')
+                                            output_width=256, layer_name='layer-3', sharing=True)
         id_act3 = self._add_activation_layer(input_layer_id=id_hidden3, layer_name='layer-3-relu')
         id_reg3 = self._add_regularization_layer(input_layer_id=id_act3, layer_name='layer-3-dropout',
                                                  dropout_ratio=0.5)

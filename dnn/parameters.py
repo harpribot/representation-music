@@ -9,9 +9,9 @@ def weight_variable(shape, scope=None):
     """
     initial = tf.truncated_normal(shape, stddev=0.01)
     if scope:
-        # return tf.Variable(initial, name=scope)
         return tf.get_variable(name=scope, dtype=tf.float32, initializer=initial)
-    return tf.Variable(initial)
+    else:
+        return tf.Variable(initial)
 
 
 def bias_variable(shape, scope=None):
@@ -22,6 +22,6 @@ def bias_variable(shape, scope=None):
     """
     initial = tf.constant(0.01, shape=shape)
     if scope:
-        #return tf.Variable(initial, name=scope)
         return tf.get_variable(name=scope, dtype=tf.float32, initializer=initial)
-    return tf.Variable(initial)
+    else:
+        return tf.Variable(initial)
