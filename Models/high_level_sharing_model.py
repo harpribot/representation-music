@@ -1,10 +1,10 @@
 from model import Model
 
 
-class LowLevelSharingModel(Model):
+class HighLevelSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A low level sharing model
+        A high level sharing model
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
@@ -37,16 +37,16 @@ class LowLevelSharingModel(Model):
         self.name_network(task_id)
         self.network_type(is_first)
 
-        # First hidden layer; incoming weights are shared
+        # First hidden layer; incoming weights are not shared
         print 'Adding Hidden Layer 1 for Task-' + task_id
         id_hidden1 = self.add_hidden_layer(input_layer_id=input_layer_id, input_width=self.input_dimension,
-                                            output_width=1024, layer_name='layer-1', sharing=True)
+                                            output_width=1024, layer_name='layer-1')
         id_act1 = self.add_activation_layer(input_layer_id=id_hidden1, layer_name='layer-1-relu')
 
-        # Second hidden layer; incoming weights are shared
+        # Second hidden layer; incoming weights are not shared
         print 'Adding Hidden Layer 2 for Task-' + task_id
         id_hidden2 = self.add_hidden_layer(input_layer_id=id_act1, input_width=1024,
-                                            output_width=512, layer_name='layer-2', sharing=True)
+                                            output_width=512, layer_name='layer-2')
         id_act2 = self.add_activation_layer(input_layer_id=id_hidden2, layer_name='layer-2-relu')
 
         # Third hidden layer; incoming weights are shared
@@ -57,7 +57,7 @@ class LowLevelSharingModel(Model):
         id_reg3 = self.add_regularization_layer(input_layer_id=id_act3, layer_name='layer-3-dropout',
                                                  dropout_ratio=0.5)
 
-        # Fourth hidden laye; incoming weights are not shared
+        # Fourth hidden layer; incoming weights are not shared
         print 'Adding Hidden Layer 4 for Task-' + task_id
         id_hidden4 = self.add_hidden_layer(input_layer_id=id_reg3, input_width=256,
                                             output_width=128, layer_name='layer-4')

@@ -1,5 +1,6 @@
 import tensorflow as tf
 from Models.low_level_sharing_model import LowLevelSharingModel
+from Models.high_level_sharing_model import HighLevelSharingModel
 from dnn.optimizer import Optimizer
 import numpy as np
 from dnn.loss import mse
@@ -8,7 +9,7 @@ LEARNING_RATE = 1e-4
 
 
 class Experiment():
-    def __init__(self, task_ids, input_dimension, output_dimensions, input_data, labels):
+    def __init__(self, task_ids, input_dimension, output_dimensions, input_data, labels, model_class):
         """
         Class to run experiments.
         :param task_ids: List of task identifiers
@@ -16,13 +17,14 @@ class Experiment():
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
         :param input_data: Input set
         :param labels: Ground-truth labels for the input
+        :param model_class: A class derived from the Model class
         :return: None
         """
         self.sess = None
         self.task_ids = task_ids
         self.input_data = input_data
         self.labels = labels
-        self.model = LowLevelSharingModel(task_ids, input_dimension, output_dimensions)
+        self.model = model_class(task_ids, input_dimension, output_dimensions)
 
     def initialize_network(self):
         self.sess = tf.InteractiveSession()
@@ -56,7 +58,8 @@ def main():
     input_data = np.random.rand(input_dimension)
     output_dimensions = {'1': 1, '2': 1, '3': 1}
     labels = {'1': 0.5, '2': 0.8, '3': 10.}
-    exp = Experiment(task_ids, input_dimension, output_dimensions, input_data, labels)
+    exp = Experiment(task_ids=task_ids, input_dimension=input_dimension, output_dimensions=output_dimensions,
+                     input_data=input_data, labels=labels, model_class=LowLevelSharingModel)
     exp.initialize_network()
     exp.train()
 
