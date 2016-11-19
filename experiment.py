@@ -23,7 +23,7 @@ class Experiment(LowLevelSharingModel):
     def __initialize_trainer(self):
         self.cost = mse(0., 0.)
         for output_id, _ in self.output_info:
-            self.cost += self.layers['loss-' + output_id]
+            self.cost += self.layers[output_id + 'loss']
 
         opt = Optimizer(self.cost)
         self.optimizer = opt.get_adagrad(LEARNING_RATE)
@@ -32,12 +32,12 @@ class Experiment(LowLevelSharingModel):
         feed_dict = dict()
         feed_dict[self.layers['input']] = [self.input_data]
         for output_id, _ in self.output_info:
-            feed_dict[self.layers['ground-truth-' + output_id]] = [[self.output_labels[output_id]]]
+            feed_dict[self.layers[output_id + 'ground-truth']] = [[self.output_labels[output_id]]]
 
         self.sess.run(self.optimizer, feed_dict=feed_dict)
 
         # see both of the outputs
-        print self.sess.run([self.layers['output-' + '1'], self.layers['output-' + '2']], feed_dict=feed_dict)
+        print self.sess.run([self.layers['1' + 'prediction'], self.layers['2' + 'prediction']], feed_dict=feed_dict)
 
 
 input_data = np.random.rand(5000)
