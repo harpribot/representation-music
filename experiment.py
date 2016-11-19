@@ -19,7 +19,6 @@ class Experiment(LowLevelSharingModel):
         self._create_model()
         self.__initialize_trainer()
         self.sess.run(tf.initialize_all_variables())
-        print [v.name for v in tf.all_variables()]
 
     def __initialize_trainer(self):
         self.cost = mse(0., 0.)
