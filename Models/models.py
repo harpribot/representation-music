@@ -41,7 +41,6 @@ class LowLevelSharingModel(Layers):
         :param input_id: The id of the input used for the network
         :return: None
         """
-        print 'Naming the network'
         self._name_network(output_id)
         self._network_type(is_first)
 
