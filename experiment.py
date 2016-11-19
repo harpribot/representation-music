@@ -37,13 +37,13 @@ class Experiment(LowLevelSharingModel):
         self.sess.run(self.optimizer, feed_dict=feed_dict)
 
         # see both of the outputs
-        print self.sess.run([self.layers['1' + 'prediction'], self.layers['2' + 'prediction']], feed_dict=feed_dict)
+        print self.sess.run([self.layers['1' + 'prediction'], self.layers['2' + 'prediction'], self.layers['3' + 'prediction']], feed_dict=feed_dict)
 
 
 input_data = np.random.rand(5000)
-labels = {'1': 0.5, '2': 0.8}
+labels = {'1': 0.5, '2': 0.8, '3': 0.9}
 input_info = ('input', 5000)
-output_info = [('1', 1), ('2', 1)]
+output_info = [('1', 1), ('2', 1), ('3', 1)]
 exp = Experiment(input_info, output_info, input_data, labels)
 exp.initialize_network()
 exp.train()
