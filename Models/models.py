@@ -1,11 +1,11 @@
-import tensorflow as tf
 from dnn.layers import Layers
+from abc import abstractmethod
 
 
-class LowLevelSharingModel(Layers):
+class Model(Layers):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A low level sharing model
+        The model class
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
@@ -17,16 +17,29 @@ class LowLevelSharingModel(Layers):
 
         Layers.__init__(self)
 
-    def _create_model(self):
-        """
-        Creates the model consisting of several parallel networks
-        :return: None
-        """
-        self.__create_parallel_networks() 
+    @abstractmethod
+    def create_model(self):
+        pass
 
-    def __create_parallel_networks(self):
+    @abstractmethod
+    def __create_network(self, task_id, input_layer_id, is_first):
+        pass
+
+
+class LowLevelSharingModel(Model):
+    def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        Create all the parallel networks one by one
+        A low level sharing model
+        :param task_ids: List of task identifiers
+        :param input_dimension: Input dimension
+        :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
+        """
+        Model.__init__(self, task_ids, input_dimension, output_dimensions)
+
+    def create_model(self):
+        """
+        Creates the model consisting of several parallel networks. The networks are built one at a time.
+        :return: None
         :return: None
         """
         print 'Adding Input Layer'

@@ -10,7 +10,7 @@ LEARNING_RATE = 1e-4
 class Experiment():
     def __init__(self, task_ids, input_dimension, output_dimensions, input_data, labels):
         """
-        Class to run experiments.\
+        Class to run experiments.
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
@@ -26,7 +26,7 @@ class Experiment():
 
     def initialize_network(self):
         self.sess = tf.InteractiveSession()
-        self.model._create_model()
+        self.model.create_model()
         self.__initialize_trainer()
         self.sess.run(tf.initialize_all_variables())
 
