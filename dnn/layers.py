@@ -37,9 +37,13 @@ class Layers(object):
         """
         layer_id = self.__get_layer_id(layer_name)
         scope = self.__get_scope(layer_name, layer_id, sharing)
-        with tf.variable_scope(scope):
+        with tf.variable_scope(scope) as internal_scope:
+            if self.is_first:
+                internal_scope.reuse_variables()
             assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
             weights = weight_variable([input_width, output_width])
+            if sharing:
+                print weights
             biases = bias_variable([output_width])
             if batch_norm:
                 self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights)
@@ -167,3 +171,6 @@ class Layers(object):
 
     def __get_layer_id(self, layer_name):
         return self.name + layer_name
+
+    def _network_type(self, is_first):
+        self.is_first = is_first

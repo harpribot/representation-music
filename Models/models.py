@@ -28,15 +28,12 @@ class LowLevelSharingModel(Layers):
         print 'Adding Input Layer'
         id_inp = self._add_input_layer(width=self.input_size, layer_name=self.input_id)
 
-        first_model = True
-        with tf.variable_scope("siamese") as scope:
-            for output_id, output_dim in self.output_info:
-                self.__create_network(output_id, output_dim, id_inp)
-                if first_model:
-                    first_model = False
-                    scope.reuse_variables()
+        is_first = True
+        for output_id, output_dim in self.output_info:
+            self.__create_network(output_id, output_dim, id_inp, is_first)
+            is_first = False
 
-    def __create_network(self, output_id, output_dim, input_id):
+    def __create_network(self, output_id, output_dim, input_id, is_first):
         """
         Create each network
         :param output_id: The id of the output labelling task
@@ -46,6 +43,7 @@ class LowLevelSharingModel(Layers):
         """
         print 'Naming the network'
         self._name_network(output_id)
+        self._network_type(is_first)
 
         # First hidden layer which is shared across all tasks
         print 'Adding Hidden Layer 1 for Task-' + output_id
