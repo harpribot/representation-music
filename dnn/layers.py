@@ -140,14 +140,6 @@ class Layers(object):
 
         return layer_id
 
-    def __layer_verifier(self, layer_id):
-        """
-        Verifies if the layer asked to be formed is a valid layer and is not already formed before
-        :param layer_id: The unique id of the layer. Type=string
-        :return: True, if the layer is valid, else False
-        """
-        return layer_id not in self.layers
-
     def add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type='mse'):
         """
         Adds a layer corresponding to the loss function
@@ -172,6 +164,9 @@ class Layers(object):
     def name_network(self, name):
         self.name = name
 
+    def network_type(self, is_first):
+        self.is_first = is_first
+
     def __get_scope(self, layer_name, layer_id, sharing):
         if sharing:
             return layer_name
@@ -181,5 +176,10 @@ class Layers(object):
     def __get_layer_id(self, layer_name):
         return self.name + '-' + layer_name
 
-    def network_type(self, is_first):
-        self.is_first = is_first
+    def __layer_verifier(self, layer_id):
+        """
+        Verifies if the layer asked to be formed is a valid layer and is not already formed before
+        :param layer_id: The unique id of the layer. Type=string
+        :return: True, if the layer is valid, else False
+        """
+        return layer_id not in self.layers

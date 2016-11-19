@@ -30,14 +30,6 @@ class Experiment():
         self.__initialize_trainer()
         self.sess.run(tf.initialize_all_variables())
 
-    def __initialize_trainer(self):
-        self.cost = mse(0., 0.)
-        for task_id in self.task_ids:
-            self.cost += self.model.get_layer(task_id + '-loss')
-
-        opt = Optimizer(self.cost)
-        self.optimizer = opt.get_adagrad(LEARNING_RATE)
-
     def train(self):
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = [self.input_data]
@@ -48,6 +40,14 @@ class Experiment():
 
         # see both of the outputs
         print self.sess.run([self.model.get_layer(tid + '-prediction') for tid in self.task_ids], feed_dict=feed_dict)
+
+    def __initialize_trainer(self):
+        self.cost = mse(0., 0.)
+        for task_id in self.task_ids:
+            self.cost += self.model.get_layer(task_id + '-loss')
+
+        opt = Optimizer(self.cost)
+        self.optimizer = opt.get_adagrad(LEARNING_RATE)
 
 
 def main():
