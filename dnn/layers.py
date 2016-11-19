@@ -22,7 +22,7 @@ class Layers(object):
         assert not self.__layer_verifier(layer_id), 'Invalid: Layer not present'
         return self.layers[layer_id]
 
-    def _add_input_layer(self, width, layer_name='input'):
+    def add_input_layer(self, width, layer_name='input'):
         """
         Adds input layer to the model
         :param width: The width of the input = dimension of the input
@@ -34,7 +34,7 @@ class Layers(object):
 
         return layer_name
 
-    def _add_hidden_layer(self, input_layer_id, input_width, output_width,
+    def add_hidden_layer(self, input_layer_id, input_width, output_width,
                           layer_name, batch_norm=True, sharing=False):
         """
         Adds the hidden layer to the model
@@ -63,7 +63,7 @@ class Layers(object):
 
         return layer_id
 
-    def _add_regularization_layer(self, input_layer_id, layer_name, regularization_type='dropout',
+    def add_regularization_layer(self, input_layer_id, layer_name, regularization_type='dropout',
                                   epsilon=None, dropout_ratio=None):
         """
         Adds the regularization layer to the model
@@ -91,7 +91,7 @@ class Layers(object):
 
         return layer_id
 
-    def _add_output_layer(self, input_layer_id, input_width, output_width, layer_name='output'):
+    def add_output_layer(self, input_layer_id, input_width, output_width, layer_name='output'):
         """
         Adds the output layer to the model
         :param input_layer_id: The input layer identifier
@@ -108,7 +108,7 @@ class Layers(object):
 
         return layer_id
 
-    def _add_ground_truth_layer(self, width, layer_name='ground_truth'):
+    def add_ground_truth_layer(self, width, layer_name='ground_truth'):
         """
         Adds ground truth layer to the model
         :param width: The width of the ground truth = dimension of the input
@@ -121,7 +121,7 @@ class Layers(object):
 
         return layer_id
 
-    def _add_activation_layer(self, input_layer_id, layer_name, activation_type='relu'):
+    def add_activation_layer(self, input_layer_id, layer_name, activation_type='relu'):
         """
         Adds the activation layer
         :param input_layer_id: The input layer identifier
@@ -148,7 +148,7 @@ class Layers(object):
         """
         return layer_id not in self.layers
 
-    def _add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type='mse'):
+    def add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type='mse'):
         """
         Adds a layer corresponding to the loss function
         :param layer_name: The name of the layer. Type=string
@@ -169,7 +169,7 @@ class Layers(object):
         else:
             raise ValueError('The type of loss can only be one of ["mse"]')
 
-    def _name_network(self, name):
+    def name_network(self, name):
         self.name = name
 
     def __get_scope(self, layer_name, layer_id, sharing):
@@ -181,5 +181,5 @@ class Layers(object):
     def __get_layer_id(self, layer_name):
         return self.name + '-' + layer_name
 
-    def _network_type(self, is_first):
+    def network_type(self, is_first):
         self.is_first = is_first
