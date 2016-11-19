@@ -1,6 +1,7 @@
 import tensorflow as tf
 from Models.low_level_sharing_model import LowLevelSharingModel
 from Models.high_level_sharing_model import HighLevelSharingModel
+from Models.interspersed_sharing_model import InterspersedSharingModel
 from dnn.optimizer import Optimizer
 import numpy as np
 from dnn.loss import mse
