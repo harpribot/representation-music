@@ -1,5 +1,5 @@
 import tensorflow as tf
-from Models.models import LowLevelSharingModel
+from Models.low_level_sharing_model import LowLevelSharingModel
 from dnn.optimizer import Optimizer
 import numpy as np
 from dnn.loss import mse
