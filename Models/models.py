@@ -3,14 +3,18 @@ from dnn.layers import Layers
 
 
 class LowLevelSharingModel(Layers):
-    def __init__(self, input_info, output_info):
+    def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A low level sharing model
-        :param input_info: (input_id , input_size)
-        :param output_info: (output_id, output_size)
+        :param task_ids: List of task identifiers
+        :param input_dimension: Input dimension
+        :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
         """
-        self.input_id, self.input_size = input_info
-        self.output_info = output_info
+        self.task_ids = task_ids
+        self.input_dimension = input_dimension
+        self.output_dimensions = output_dimensions
+        self.input_id = 'input'
+
         Layers.__init__(self)
 
     def _create_model(self):
@@ -18,7 +22,7 @@ class LowLevelSharingModel(Layers):
         Creates the model consisting of several parallel networks
         :return: None
         """
-        self.__create_parallel_networks()
+        self.__create_parallel_networks() 
 
     def __create_parallel_networks(self):
         """
@@ -26,38 +30,38 @@ class LowLevelSharingModel(Layers):
         :return: None
         """
         print 'Adding Input Layer'
-        id_inp = self._add_input_layer(width=self.input_size, layer_name=self.input_id)
+        input_layer_id = self._add_input_layer(width=self.input_dimension, layer_name=self.input_id)
 
         is_first = True
-        for output_id, output_dim in self.output_info:
-            self.__create_network(output_id, output_dim, id_inp, is_first)
+        for task_id in self.task_ids:
+            self.__create_network(task_id, input_layer_id, is_first)
             is_first = False
 
-    def __create_network(self, output_id, output_dim, input_id, is_first):
+    def __create_network(self, task_id, input_layer_id, is_first):
         """
         Create each network
-        :param output_id: The id of the output labelling task
-        :param output_dim: The prediction dimension
-        :param input_id: The id of the input used for the network
+        :param task_id: Task identifier
+        :param input_layer_id: The id of the input used for the network
+        :param if_first: Boolean which is True if the network is the first one being created.
         :return: None
         """
-        self._name_network(output_id)
+        self._name_network(task_id)
         self._network_type(is_first)
 
         # First hidden layer which is shared across all tasks
-        print 'Adding Hidden Layer 1 for Task-' + output_id
-        id_hidden1 = self._add_hidden_layer(input_layer_id=input_id, input_width=self.input_size,
+        print 'Adding Hidden Layer 1 for Task-' + task_id
+        id_hidden1 = self._add_hidden_layer(input_layer_id=input_layer_id, input_width=self.input_dimension,
                                             output_width=1024, layer_name='layer-1', sharing=True)
         id_act1 = self._add_activation_layer(input_layer_id=id_hidden1, layer_name='layer-1-relu')
 
         # Second hidden layer which is shared across all tasks
-        print 'Adding Hidden Layer 2 for Task-' + output_id
+        print 'Adding Hidden Layer 2 for Task-' + task_id
         id_hidden2 = self._add_hidden_layer(input_layer_id=id_act1, input_width=1024,
                                             output_width=512, layer_name='layer-2', sharing=True)
         id_act2 = self._add_activation_layer(input_layer_id=id_hidden2, layer_name='layer-2-relu')
 
         # Third hidden layer which is shared across all tasks
-        print 'Adding Hidden Layer 3 for Task-' + output_id
+        print 'Adding Hidden Layer 3 for Task-' + task_id
         id_hidden3 = self._add_hidden_layer(input_layer_id=id_act2, input_width=512,
                                             output_width=256, layer_name='layer-3', sharing=True)
         id_act3 = self._add_activation_layer(input_layer_id=id_hidden3, layer_name='layer-3-relu')
@@ -65,7 +69,7 @@ class LowLevelSharingModel(Layers):
                                                  dropout_ratio=0.5)
 
         # Fourth hidden layer is not shared
-        print 'Adding Hidden Layer 4 for Task-' + output_id
+        print 'Adding Hidden Layer 4 for Task-' + task_id
         id_hidden4 = self._add_hidden_layer(input_layer_id=id_reg3, input_width=256,
                                             output_width=128, layer_name='layer-4')
         id_act4 = self._add_activation_layer(input_layer_id=id_hidden4, layer_name='layer-4-relu')
@@ -73,15 +77,15 @@ class LowLevelSharingModel(Layers):
                                                  dropout_ratio=0.5)
 
         # Output layer is not shared
-        print 'Adding Output Layer for Task-' + output_id
+        print 'Adding Output Layer for Task-' + task_id
         prediction_id = self._add_output_layer(input_layer_id=id_reg4, input_width=128,
-                                               output_width=output_dim, layer_name='prediction')
+                                               output_width=self.output_dimensions[task_id], layer_name='prediction')
 
         # Ground truth layer for the task
-        print 'Adding Ground Truth Layer for Task-' + output_id
-        groundtruth_id = self._add_ground_truth_layer(width=output_dim, layer_name='ground-truth')
+        print 'Adding Ground Truth Layer for Task-' + task_id
+        groundtruth_id = self._add_ground_truth_layer(width=self.output_dimensions[task_id], layer_name='ground-truth')
 
         # Loss layer for the task
-        print 'Adding Loss Layer for Task-' + output_id
+        print 'Adding Loss Layer for Task-' + task_id
         self._add_loss_layer(layer_name='loss', prediction_layer_id=prediction_id,
                              ground_truth_layer_id=groundtruth_id, loss_type='mse')

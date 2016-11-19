@@ -13,6 +13,15 @@ class Layers(object):
         self.layers = dict()
         self.name = ''
 
+    def get_layer(self, layer_id):
+        """
+        Retuns the tensorflow object corresponding to the requested layer
+        :param layer_id: Layer identifier
+        :return: Tensorflow layer object
+        """
+        assert not self.__layer_verifier(layer_id), 'Invalid: Layer not present'
+        return self.layers[layer_id]
+
     def _add_input_layer(self, width, layer_name='input'):
         """
         Adds input layer to the model
@@ -49,8 +58,8 @@ class Layers(object):
             else:
                 self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
 
-        print weights
-        print biases
+        # print weights
+        # print biases
 
         return layer_id
 
@@ -170,7 +179,7 @@ class Layers(object):
             return layer_id
 
     def __get_layer_id(self, layer_name):
-        return self.name + layer_name
+        return self.name + '-' + layer_name
 
     def _network_type(self, is_first):
         self.is_first = is_first
