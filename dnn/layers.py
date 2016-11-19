@@ -45,7 +45,7 @@ class Layers(object):
                 with tf.variable_scope("hello"):
                     weights = weight_variable([input_width, output_width], "weight")
                     biases = bias_variable([output_width], "bias")
-            if sharing:
+            if not self.is_first and sharing:
                 with tf.variable_scope("hello", reuse=True):
                     weights = tf.get_variable("weight",[input_width, output_width])
                     biases = tf.get_variable("bias", [output_width])
