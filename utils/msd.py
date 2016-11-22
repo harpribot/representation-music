@@ -250,7 +250,7 @@ print db.get_bow(track)
 # Sample Usage - Make a train/validate/test split and acquire the features for each item in train.
 '''
 db.generate_split(0.75, 0.10, 0.15, 5000)
-features = [t.vector for t in db.get_features(db.train)]
+features = [t.vector() for t in db.get_features(db.train)]
 bow = [bow for bow in db.get_bow(db.train)]
 '''
 
