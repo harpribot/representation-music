@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 import sys
 
 
@@ -271,23 +271,16 @@ class MillionSongDataset:
 
 
 
-features       = '../Data/msongs.db'
-lyrics         = '../Data/mxm_dataset.db'
-lyric_mappings = '../Data/bow.txt'
-tracks         = '../Data/tracks.txt'
-db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
+# features       = '../Data/msongs.db'
+# lyrics         = '../Data/mxm_dataset.db'
+# lyric_mappings = '../Data/bow.txt'
+# tracks         = '../Data/tracks.txt'
+# db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
 
-db.generate_split(0.75, 0.10, 0.15)
 
-print len(db.train)
-print len(db.validate)
-print len(db.test)
-
-features = [t.vector() for t in db.get_features(db.train)]
-bow = [bow for bow in db.get_bow(db.train)]
-
-print bow[550]
-
+# print len(db.train)
+# print len(db.validate)
+# print len(db.test)
 
 
 '''    
