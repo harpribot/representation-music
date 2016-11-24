@@ -1,7 +1,7 @@
 import os
 import time
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
@@ -10,7 +10,8 @@ from dnn.optimizer import Optimizer
 from Models.high_level_sharing_model import HighLevelSharingModel
 from Models.interspersed_sharing_model import InterspersedSharingModel
 from Models.low_level_sharing_model import LowLevelSharingModel
-from utils.params import BATCH_SIZE, EXPT_DIRECTORY_PATH, FREQ_OF_CHECKPOINTS, LEARNING_RATE, NUM_EPOCHS
+from utils.params import BATCH_SIZE, EXPT_DIRECTORY_PATH, FREQ_OF_CHECKPOINTS, FREQ_OF_EVALUATIONS, LEARNING_RATE
+from utils.params import NUM_EPOCHS
 
 
 class Experiment():
@@ -35,10 +36,19 @@ class Experiment():
         self.optimizer = None
         self.saver = None
         self.model = model_class(task_ids, input_dimension, output_dimensions)
-        self.expt_dir = self._create_expt_directory(expt_name)
 
-        self.training_errors = []
-        self.validation_errors = []
+        # Dictionary of list of training errors indexed by task-identifiers. Each list contains errors of the model
+        # on the training set for that task over the course of training.
+        self.training_errors = {}
+        for task_id in self.task_ids:
+            self.training_errors[task_id] = []
+
+        # Dictionary of list of validation errors indexed by task-identifiers. Each list contains errors of the model
+        # on the validation set for that task over the course of training.
+        self.validation_errors = {}
+        
+        self._initialize_error_dictionaries()
+        self._create_expt_directory(expt_name)
 
     def initialize_network(self):
         self.sess = tf.InteractiveSession()
@@ -48,10 +58,10 @@ class Experiment():
         self.saver = tf.train.Saver()
 
     def train(self):
+        print("Starting training")
         step = 0
         start_time = time.time()
-        for epoch in xrange(NUM_EPOCHS):
-
+        for epoch in xrange(1, NUM_EPOCHS + 1):
             for minibatch_indices in self._iterate_minibatches(BATCH_SIZE):
                 feed_dict = dict()
                 feed_dict[self.model.get_layer('input')] = self.inputs[minibatch_indices]
@@ -63,8 +73,8 @@ class Experiment():
                 step += 1
                 duration = int(time.time() - start_time)
 
-                # Evaluate and checkpoint every 100 steps
-                if step % FREQ_OF_CHECKPOINTS == 0:
+                # Evaluate model fairly often, including on the last epoch.
+                if step % FREQ_OF_EVALUATIONS == 0 or epoch == NUM_EPOCHS:
                     # Print current errors on training and validation sets.
                     t_errors = self._training_errors()
                     v_errors = self._validation_errors()
@@ -72,14 +82,27 @@ class Experiment():
                           .format(step, epoch, duration, t_errors, v_errors))
 
                     # Add current errors to the cummulative errors list for plotting.
-                    self.training_errors.extend(t_errors)
-                    self.validation_errors.extend(v_errors)
+                    for task_id in self.task_ids:
+                        self.training_errors[task_id].append(t_errors[task_id])
+                        self.validation_errors[task_id].append(v_errors[task_id])
                     # self._plot_errors()
 
-                    # Checkpoint model
+                # Checkpoint the model periodically, including on the last epoch
+                if step % FREQ_OF_CHECKPOINTS == 0 or epoch == NUM_EPOCHS:
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
 
+    def _initialize_error_dictionaries(self):
+        for task_id in self.task_ids:
+            self.training_errors[task_id] = []
+            self.validation_errors[task_id] = []
+
     def _create_expt_directory(self, expt_name):
+        """
+        Creates a directory for this experiment where all the logs and outputs are saved. The directory is named
+        after the experiment-name suffixed with a 4-digit random number. The 
+        :param expt_name: Experiment name.
+        :return: None
+        """
         os.chdir(EXPT_DIRECTORY_PATH)   # Change working directory to the Experiments folder
         expt_dir = expt_name + "-" + str(np.random.randint(1000, 9999))
         try:
@@ -90,7 +113,6 @@ class Experiment():
         finally:
             os.chdir(EXPT_DIRECTORY_PATH + "/" + expt_dir)   # Change working directory to the newly created folder
             print("Experiment Directory: " + expt_dir)
-            return expt_dir
 
     def __initialize_trainer(self):
         self.cost = mse(0., 0.)
@@ -101,6 +123,13 @@ class Experiment():
         self.optimizer = opt.get_adagrad(LEARNING_RATE)
 
     def _iterate_minibatches(self, batchsize, shuffle=True):
+        """Yields list of indices for each minibatch. The last minibatch is not used because it usually has 
+        a different size. Since training set is shuffled before creating minibatches, the training examples in the
+        ignored minibatches are used in some other minibatch in at least one epoch with high probability.
+        :param batchsize: Size of each minibatch
+        :param shuffle: Boolean to be set to True if the training set needs to be shuffled at each epoch.
+        :yield: List of indices corresponding to a minibatch
+        """
         num_input = self.inputs.shape[0]
         indices = np.arange(num_input)
         if shuffle:
@@ -110,34 +139,38 @@ class Experiment():
             yield minibatch
 
     def _training_errors(self):
+        """Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
+        task on the training set."""
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.inputs
         for id_ in self.task_ids:
             feed_dict[self.model.get_layer(id_ + '-ground-truth')] = self.labels[id_]
-        errors = []
+        errors = {}
         for task_id in self.task_ids:
-            errors.append(self.model.get_layer(task_id + '-loss')
-                          .eval(session=self.sess, feed_dict=feed_dict))
+            errors[task_id] = self.model.get_layer(task_id + '-loss').eval(session=self.sess, feed_dict=feed_dict)
         return errors
 
     def _validation_errors(self):
+        """Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
+        task on the training set."""
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.inputs
         for id_ in self.task_ids:
             feed_dict[self.model.get_layer(id_ + '-ground-truth')] = self.labels[id_]
-        errors = []
+        errors = {}
         for task_id in self.task_ids:
-            errors.append(self.model.get_layer(task_id + '-loss')
-                          .eval(session=self.sess, feed_dict=feed_dict))
+            errors[task_id] = self.model.get_layer(task_id + '-loss').eval(session=self.sess, feed_dict=feed_dict)
         return errors
 
     def _plot_errors(self):
-        x = np.arange(len(self.training_errors))
-        fig, ax = plt.subplots(1, 1)
-        plt.plot(x, self.training_errors, 'r', label='training')
-        plt.plot(x, self.validation_errors, 'b', label='validation')
-        plt.legend(loc="best", framealpha=0.3)
-        fig.savefig("error-curve.png")
+        """Plots and saves the error curves for all the tasks."""
+        for task_id in self.task_ids:
+            x = np.arange(len(self.training_errors))
+            fig, ax = plt.subplots(1, 1)
+            plt.plot(x, self.training_errors[task_id], 'r', label='training')
+            plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
+            plt.legend(loc="best", framealpha=0.3)
+            fig.savefig("error-curve-task-{}.png".format(task_id))
 
 
 def main():
