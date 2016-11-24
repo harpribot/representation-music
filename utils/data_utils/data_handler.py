@@ -17,6 +17,7 @@ def fetch_data(task_ids):
     # Generate train/validation/test splits.
     db.generate_split(TRAIN_FRACTION, VALIDATE_FRACTION, TEST_FRACTION, TOTAL_NUM_EXAMPLES)
 
+    print("------")
     # Training set
     print("Creating training set")
     x_train = np.array([bow for bow in db.get_bow(db.train)], dtype=float)
@@ -57,4 +58,5 @@ def create_experiment(expt_name):
             raise
     finally:
         os.chdir("./" + expt_dir)  # Change working directory to the newly created folder
+        print("------")
         print("Experiment Directory: " + expt_dir)

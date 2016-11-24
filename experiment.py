@@ -3,18 +3,17 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from Models.low_level_sharing_model import LowLevelSharingModel
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
+from Models.low_level_sharing_model import LowLevelSharingModel
 from utils.data_utils.labels import Labels
-from utils.network_utils.params import BATCH_SIZE, NUM_EPOCHS, LEARNING_RATE
-from utils.training_utils.params import FREQ_OF_CHECKPOINTS, FREQ_OF_EVALUATIONS
 from utils.data_utils.data_handler import fetch_data, create_experiment
+from utils.argument_parser import parse_arguments
 
 
 class Experiment(object):
-    def __init__(self, task_ids,
-                 x_train, x_validate, x_test, y_train, y_validate, y_test, model_class, expt_name):
+    def __init__(self, task_ids, x_train, x_validate, x_test, y_train, y_validate, y_test, model_class, expt_name,
+                 learning_rate, batch_size, num_epochs, checkpoint_freq, evaluation_freq):
         """
         Class to run experiments.
         :param task_ids: List of task identifiers
@@ -27,6 +26,11 @@ class Experiment(object):
         :param model_class: A class derived from the Model class
         :param expt_name: Name for the experiment. This will be used as a prefix to the name of a directory created to
             store the logs and output of this experiment.
+        :param learning_rate: Learning rate for SGD-based optimization.
+        :param batch_size: Size of mini-batches for SGD-based training.
+        :param num_epochs: Number of epochs -- full pass over the training set.
+        :param checkpoint_freq: Number of mini-batch SGD steps after which an evaluation is performed.
+        :param evaluation_freq: Number of mini-batch SGD steps after which a checkpoint is taken.
         :return: None
         """
         self.task_ids = task_ids
@@ -36,6 +40,12 @@ class Experiment(object):
         self.y_train = y_train
         self.y_validate = y_validate
         self.y_test = y_test
+
+        self.learning_rate = learning_rate
+        self.batch_size = batch_size
+        self.num_epochs = num_epochs
+        self.checkpoint_freq = checkpoint_freq
+        self.evaluation_freq = evaluation_freq
 
         self.sess = None
         self.optimizer = None
@@ -63,6 +73,7 @@ class Experiment(object):
         :return: None
         """
         self.sess = tf.InteractiveSession()
+        print("------")
         self.model.create_model()
         self._initialize_trainer()
         self.sess.run(tf.initialize_all_variables())
@@ -73,13 +84,14 @@ class Experiment(object):
         Trains the network
         :return: None
         """
+        print("------")
         print("Starting training")
         step = 0
         start_time = time.time()
-        for epoch in xrange(1, NUM_EPOCHS + 1):
-            if epoch == NUM_EPOCHS:
+        for epoch in xrange(1, self.num_epochs + 1):
+            if epoch == self.num_epochs:
                 print("Last epoch. All minibatches will be evaluated and checkpointed.")
-            for minibatch_indices in self._iterate_minibatches(BATCH_SIZE):
+            for minibatch_indices in self._iterate_minibatches(self.batch_size):
                 feed_dict = dict()
                 feed_dict[self.model.get_layer('input')] = self.x_train[minibatch_indices]
                 for id_ in self.task_ids:
@@ -91,7 +103,7 @@ class Experiment(object):
                 duration = int(time.time() - start_time)
 
                 # Evaluate model fairly often, including on the last epoch.
-                if step % FREQ_OF_EVALUATIONS == 0 or epoch == NUM_EPOCHS:
+                if step % self.evaluation_freq == 0 or epoch == self.num_epochs:
                     # Print current errors on training and validation sets.
                     t_errors = self._training_errors()
                     v_errors = self._validation_errors()
@@ -105,7 +117,7 @@ class Experiment(object):
                     self._plot_errors()
 
                 # Checkpoint the model periodically, including on the last epoch
-                if step % FREQ_OF_CHECKPOINTS == 0 or epoch == NUM_EPOCHS:
+                if step % self.checkpoint_freq == 0 or epoch == self.num_epochs:
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
 
     def _initialize_error_dictionaries(self):
@@ -127,7 +139,7 @@ class Experiment(object):
             self.cost += self.model.get_layer(task_id + '-loss')
 
         opt = Optimizer(self.cost)
-        self.optimizer = opt.get_adagrad(LEARNING_RATE)
+        self.optimizer = opt.get_adagrad(self.learning_rate)
 
     def _iterate_minibatches(self, batch_size, shuffle=True):
         """
@@ -194,25 +206,36 @@ class Experiment(object):
             fig.savefig("error-curve-task-{}.png".format(task_id))
 
 
-def main():
-    """Runs the pipeline on the Million Songs Data set."""
+def main(args):
+    """
+    Runs the pipeline on the Million Songs Data set.
+    :param args: Command-line arguments parsed with argparse.
+    :return: None
+    """
 
     # List of Labels to be used in the experiment.
     task_ids = [Labels.hotness.value, Labels.key.value, Labels.loudness.value]
 
     # Get the training, validation and testing set data and ground-truths
-    x_train, x_val, x_test, y_train, y_val, y_test = fetch_data(task_ids)
+    x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
 
-    exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_val,
-                     x_test=x_test, y_train=y_train, y_validate=y_val, y_test=y_test,
-                     model_class=LowLevelSharingModel)
+    exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
+                     x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
+                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
+                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
+    print("------")
     print("Training complete. Logs, outputs, and model saved in " + os.getcwd())
 
 
-def dummy():
-    """Runs the pipeline on a small synthetic dataset."""
+def dummy(args):
+    """
+    Runs the pipeline on a small synthetic dataset.
+    :param args: Command line arguments parsed with argpase.
+    :return: None
+    """
 
     task_ids = ['1', '2', '3']
     input_dimension = 5000  # Dimensionality of each training set
@@ -240,10 +263,21 @@ def dummy():
 
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingModel)
+                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
+                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
     print("Training complete. Logs, outputs, and model saved in " + os.getcwd())
 
+
 if __name__ == '__main__':
-    dummy()
+    args = parse_arguments()
+    print("Using the following values for hyperparameters:")
+    print("Learning rate = {}".format(args.learning_rate))
+    print("Mini-batch size = {}".format(args.batch_size))
+    print("Number of epochs = {}".format(args.num_epochs))
+    print("Checkpoint frequency= {}".format(args.checkpoint_freq))
+    print("Evaluation frequency = {}".format(args.evaluation_freq))
+
+    dummy(args)
