@@ -8,4 +8,5 @@ def mse(ground_truth, output):
     :param output: The network output layer
     :return: MSE error
     """
-    return tf.nn.l2_loss(ground_truth - output)
+    # return tf.nn.l2_loss(ground_truth - output)
+    return tf.reduce_mean((ground_truth - output)**2)
