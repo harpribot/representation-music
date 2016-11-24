@@ -14,13 +14,19 @@ class Layers(object):
         self.layers = dict()
         self.name = ''
 
+    def name_network(self, name):
+        self.name = name
+
+    def network_type(self, is_first):
+        self.is_first = is_first
+
     def get_layer(self, layer_id):
         """
         Retuns the tensorflow object corresponding to the requested layer
         :param layer_id: Layer identifier
         :return: Tensorflow layer object
         """
-        assert not self.__layer_verifier(layer_id), 'Invalid: Layer not present'
+        assert not self._layer_verifier(layer_id), 'Invalid: Layer not present'
         return self.layers[layer_id]
 
     def add_input_layer(self, width, layer_name='input'):
@@ -30,7 +36,7 @@ class Layers(object):
         :param layer_name: The name of the layer. Type=string
         :return: None
         """
-        assert self.__layer_verifier(layer_name), 'Invalid: This layer is already present.'
+        assert self._layer_verifier(layer_name), 'Invalid: This layer is already present.'
         self.layers[layer_name] = tf.placeholder("float", [None, width])
 
         return layer_name
@@ -45,10 +51,10 @@ class Layers(object):
         :param layer_name: The name of the layer. Type=string
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        scope = self.__get_scope(layer_name, layer_id, sharing)
+        layer_id = self._get_layer_id(layer_name)
+        scope = self._get_scope(layer_name, layer_id, sharing)
         with tf.variable_scope(scope):
-            assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+            assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
 
             reuse = sharing and (not self.is_first)
             with tf.variable_scope("hello", reuse=reuse):
@@ -75,8 +81,8 @@ class Layers(object):
         :param dropout_ratio: The fraction of the layers to be masked.
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        layer_id = self._get_layer_id(layer_name)
+        assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
         if regularization_type == 'dropout':
             if dropout_ratio:
                 self.layers[layer_id] = dropout_layer(self.layers[input_layer_id], dropout_ratio)
@@ -101,8 +107,8 @@ class Layers(object):
         ::param layer_name: The name of the layer. Type=string
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        layer_id = self._get_layer_id(layer_name)
+        assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
         weights = weight_variable([input_width, output_width])
         biases = bias_variable([output_width])
         self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
@@ -116,8 +122,8 @@ class Layers(object):
         :param layer_name: The name of the layer. Type=string
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        layer_id = self._get_layer_id(layer_name)
+        assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
         self.layers[layer_id] = tf.placeholder("float", [None, width])
 
         return layer_id
@@ -130,8 +136,8 @@ class Layers(object):
         :param activation_type: 'relu' for RELU and 'leaky-relu' for Leaky RELU. Default = RELU
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        layer_id = self._get_layer_id(layer_name)
+        assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
         if activation_type == 'relu':
             self.layers[layer_id] = relu(self.layers[input_layer_id])
         elif activation_type == 'leaky-relu':
@@ -150,10 +156,10 @@ class Layers(object):
         :param loss_type: 'mse' for MSE
         :return: None
         """
-        layer_id = self.__get_layer_id(layer_name)
-        assert self.__layer_verifier(layer_id), 'Invalid: This layer is already present.'
-        assert not self.__layer_verifier(prediction_layer_id), 'Invalid: Output layer id is invalid.'
-        assert not self.__layer_verifier(ground_truth_layer_id), 'Invalid: Ground truth layer id is invalid.'
+        layer_id = self._get_layer_id(layer_name)
+        assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
+        assert not self._layer_verifier(prediction_layer_id), 'Invalid: Output layer id is invalid.'
+        assert not self._layer_verifier(ground_truth_layer_id), 'Invalid: Ground truth layer id is invalid.'
 
         output = self.layers[prediction_layer_id]
         ground_truth = self.layers[ground_truth_layer_id]
@@ -162,22 +168,16 @@ class Layers(object):
         else:
             raise ValueError('The type of loss can only be one of ["mse"]')
 
-    def name_network(self, name):
-        self.name = name
-
-    def network_type(self, is_first):
-        self.is_first = is_first
-
-    def __get_scope(self, layer_name, layer_id, sharing):
+    def _get_scope(self, layer_name, layer_id, sharing):
         if sharing:
             return layer_name
         else:
             return layer_id
 
-    def __get_layer_id(self, layer_name):
+    def _get_layer_id(self, layer_name):
         return self.name + '-' + layer_name
 
-    def __layer_verifier(self, layer_id):
+    def _layer_verifier(self, layer_id):
         """
         Verifies if the layer asked to be formed is a valid layer and is not already formed before
         :param layer_id: The unique id of the layer. Type=string

@@ -23,10 +23,10 @@ class InterspersedSharingModel(Model):
         is_first = True
         for task_id in self.task_ids:
             print 'Creating network for Task-' + task_id
-            self.__create_network(task_id, input_layer_id, is_first)
+            self._create_network(task_id, input_layer_id, is_first)
             is_first = False
 
-    def __create_network(self, task_id, input_layer_id, is_first):
+    def _create_network(self, task_id, input_layer_id, is_first):
         """
         Create each network
         :param task_id: Task identifier

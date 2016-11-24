@@ -23,5 +23,5 @@ class Model(Layers):
         pass
 
     @abstractmethod
-    def __create_network(self, task_id, input_layer_id, is_first):
+    def _create_network(self, task_id, input_layer_id, is_first):
         pass
