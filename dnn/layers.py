@@ -13,6 +13,7 @@ class Layers(object):
         """
         self.layers = dict()
         self.name = ''
+        self.is_first = None
 
     def name_network(self, name):
         self.name = name
@@ -42,17 +43,19 @@ class Layers(object):
         return layer_name
 
     def add_hidden_layer(self, input_layer_id, input_width, output_width,
-                         layer_name, batch_norm=True, sharing=False):
+                         layer_name, batch_norm=False, sharing=False):
         """
         Adds the hidden layer to the model
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
         :param layer_name: The name of the layer. Type=string
+        :param batch_norm: True -> if next layer is a batch normalization layer, else False. Default= False
+        :param sharing: True, if the layer is shared, else False.. Default=False
         :return: None
         """
         layer_id = self._get_layer_id(layer_name)
-        scope = self._get_scope(layer_name, layer_id, sharing)
+        scope = Layers._get_scope(layer_name, layer_id, sharing)
         with tf.variable_scope(scope):
             assert self._layer_verifier(layer_id), 'Invalid: This layer is already present.'
 
@@ -64,9 +67,6 @@ class Layers(object):
                 self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights)
             else:
                 self.layers[layer_id] = tf.matmul(self.layers[input_layer_id], weights) + biases
-
-        # print weights
-        # print biases
 
         return layer_id
 
@@ -104,7 +104,7 @@ class Layers(object):
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
-        ::param layer_name: The name of the layer. Type=string
+        :param layer_name: The name of the layer. Type=string
         :return: None
         """
         layer_id = self._get_layer_id(layer_name)
@@ -168,7 +168,8 @@ class Layers(object):
         else:
             raise ValueError('The type of loss can only be one of ["mse"]')
 
-    def _get_scope(self, layer_name, layer_id, sharing):
+    @staticmethod
+    def _get_scope(layer_name, layer_id, sharing):
         if sharing:
             return layer_name
         else:

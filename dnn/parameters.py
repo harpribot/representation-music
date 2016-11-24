@@ -5,6 +5,7 @@ def weight_variable(shape, scope=None):
     """
     This creates the weight placeholder for the DNN layers
     :param shape: shape of the weight variable
+    :param scope: scope of the weight variable
     :return: The tensorflow placeholder for weights
     """
     initial = tf.truncated_normal(shape, stddev=0.01)
@@ -18,6 +19,7 @@ def bias_variable(shape, scope=None):
     """
     This creates the bias placeholder for the DNN layers
     :param shape: shape of the bias variable
+    :param scope: scope of the bias variable
     :return: The tensorflow placeholder for the bias
     """
     initial = tf.constant(0.01, shape=shape)
