@@ -2,8 +2,6 @@ import sqlite3
 import sys
 
 def main():
-
-
 	# Parse out track_id from command line. This is the track ID given by the
 	# Million Song Database.
 	track_id = sys.argv[1];
