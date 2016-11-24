@@ -1,7 +1,7 @@
 import os
 import time
 
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
@@ -101,7 +101,7 @@ class Experiment():
                     for task_id in self.task_ids:
                         self.training_errors[task_id].append(t_errors[task_id])
                         self.validation_errors[task_id].append(v_errors[task_id])
-                    # self._plot_errors()
+                    self._plot_errors()
 
                 # Checkpoint the model periodically, including on the last epoch
                 if step % FREQ_OF_CHECKPOINTS == 0 or epoch == NUM_EPOCHS:
