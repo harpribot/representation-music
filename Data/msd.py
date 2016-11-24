@@ -163,8 +163,8 @@ class MillionSongLyricDatabase:
 
         for r in results:
             track_id = r[0]
-            word     = r[1]
-            count    = r[2]
+            word = r[1]
+            count = r[2]
             try:
                 if track_id in track_mappings:
                     bow[track_mappings[track_id]][self.mappings[word]] = count
