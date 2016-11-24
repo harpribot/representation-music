@@ -1,8 +1,9 @@
 import tensorflow as tf
-from parameters import weight_variable, bias_variable
-from regularization import dropout_layer, batch_norm_layer
-from activation import relu, leaky_relu
+
+from activation import leaky_relu, relu
 from loss import mse
+from parameters import bias_variable, weight_variable
+from regularization import batch_norm_layer, dropout_layer
 
 
 class Layers(object):

@@ -1,18 +1,16 @@
+import os
+import time
+
+import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
-from Models.low_level_sharing_model import LowLevelSharingModel
+
+from dnn.loss import mse
+from dnn.optimizer import Optimizer
 from Models.high_level_sharing_model import HighLevelSharingModel
 from Models.interspersed_sharing_model import InterspersedSharingModel
-from dnn.optimizer import Optimizer
-from utils.params import LEARNING_RATE
-from utils.params import BATCH_SIZE
-from utils.params import NUM_EPOCHS
-from utils.params import EXPT_DIRECTORY_PATH
-from utils.params import FREQ_OF_CHECKPOINTS
-import numpy as np
-import time
-import os
-# import matplotlib.pyplot as plt
-from dnn.loss import mse
+from Models.low_level_sharing_model import LowLevelSharingModel
+from utils.params import BATCH_SIZE, EXPT_DIRECTORY_PATH, FREQ_OF_CHECKPOINTS, LEARNING_RATE, NUM_EPOCHS
 
 
 class Experiment():

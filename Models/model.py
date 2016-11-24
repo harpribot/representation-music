@@ -1,5 +1,6 @@
-from dnn.layers import Layers
 from abc import abstractmethod
+
+from dnn.layers import Layers
 
 
 class Model(Layers):

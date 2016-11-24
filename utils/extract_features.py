@@ -1,9 +1,8 @@
-import os
 import glob
+import hdf5_getters
+import os
 import sys
 import sqlite3
-import hdf5_getters
-import numpy as np
 
 
 # Features of interest.
