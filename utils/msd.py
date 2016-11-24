@@ -51,7 +51,7 @@ class MillionSongFeatureDatabase:
 
     def __init__(self, db):
         conn = sqlite3.connect(db)
-        print db
+        # print db
         self.db = conn.cursor()
         self._fstart = 2 # Feature start index
 
