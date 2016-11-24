@@ -198,12 +198,13 @@ class Experiment(object):
         return None
         """
         for task_id in self.task_ids:
-            x = np.arange(len(self.training_errors))
+            x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
             plt.plot(x, self.training_errors[task_id], 'r', label='training')
             plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
             plt.legend(loc="best", framealpha=0.3)
             fig.savefig("error-curve-task-{}.png".format(task_id))
+        plt.close('all')
 
 
 def main(args):
