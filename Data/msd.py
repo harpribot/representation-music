@@ -1,15 +1,14 @@
-import os
 import sqlite3
-import sys
+
+DEFAULT_VALUE = [0.0, 0.0, 0, 0.0, 0, 0, 0.0, []]
 
 
 class MSFeatures:
-
-    def __init__(self, values=None):
-        '''
+    def __init__(self, values=DEFAULT_VALUE):
+        """
         You may provide initial values for the features as a list in this order:
-        
-        1. Hotttnesss
+
+        1. Hotness
         2. Duration
         3. Key
         4. Loudness
@@ -17,28 +16,24 @@ class MSFeatures:
         6. Time Signature
         7. Tempo
         8. Tags
-        '''
-        if values:
-            self.hotttnesss = values[0]
-            self.duration = values[1]
-            self.key = values[2]
-            self.loudness = values[3]
-            self.year = values[4]
-            self.time_signature = values[5]
-            self.tempo = values[6]
-            self.tags = values[7]
-        else:
-            self.hotttnesss = 0.0
-            self.duration = 0.0
-            self.key = 0
-            self.loudness = 0.0
-            self.year = 0
-            self.time_signature = 0
-            self.tempo = 0.0
-            self.tags = []
+
+        :param values: The values provided
+        """
+        self.hotness = values[0]
+        self.duration = values[1]
+        self.key = values[2]
+        self.loudness = values[3]
+        self.year = values[4]
+        self.time_signature = values[5]
+        self.tempo = values[6]
+        self.tags = values[7]
 
     def vector(self):
-        return [self.hotttnesss,
+        """
+
+        :return:
+        """
+        return [self.hotness,
                 self.duration,
                 self.key,
                 self.loudness,
@@ -48,40 +43,52 @@ class MSFeatures:
 
 
 class MillionSongFeatureDatabase:
-
     def __init__(self, db):
+        """
+
+        :param db:
+        """
         conn = sqlite3.connect(db)
         self.db = conn.cursor()
-        self._fstart = 2 # Feature start index
+        self._fstart = 2  # Feature start index
 
     def close(self):
         self.db.close()
 
     def get_features_by_msd(self, track_id):
-        '''
+        """
         Fetches features for a song by MSD ID.
-        '''
+        :param track_id: Million Songs Data set ID
+        :return:
+        """
         track_id = (track_id,)
         for row in self.db.execute('SELECT * FROM songs WHERE track_id=?', track_id):
             return MSFeatures(row[self._fstart:])
 
     def get_features_by_echo(self, echo_id):
-        '''
+        """
         Fetches features for a song by Echo Nest ID.
-        '''
+        :param echo_id: Echo Nest ID
+        :return:
+        """
         echo_id = (echo_id,)
         for row in self.db.execute('SELECT * FROM songs WHERE song_id=?', echo_id):
             return row[self._fstart:]
 
     def get_features_by_msd_list(self, track_ids):
+        """
+
+        :param track_ids:
+        :return:
+        """
         ids = set(track_ids)
         track_id_idx = 0
         for row in self.db.execute('SELECT * FROM songs WHERE ' + \
                                    'hotttness<>? AND ' + \
-                                   #'danceability<>? AND ' + \
+                                   # 'danceability<>? AND ' + \
                                    'duration<>? AND ' + \
                                    'key<>? AND ' + \
-                                   #'energy<>? AND ' + \
+                                   # 'energy<>? AND ' + \
                                    'loudness<>? AND ' + \
                                    'year<>? AND ' + \
                                    'time_signature<>? AND ' + \
@@ -91,37 +98,34 @@ class MillionSongFeatureDatabase:
                 yield MSFeatures(row[self._fstart:])
         
     def get_songs_with_all_features(self):
-        '''
-        Returns a list of MSD IDs for all songs which have all features populated.
-        '''
+        """
+
+        :return: Returns a list of MSD IDs for all songs which have all features populated.
+        """
         track_id_idx = 0
         for row in self.db.execute('SELECT * FROM songs WHERE ' + \
                                    'hotttness<>? AND ' + \
-                                   #'danceability<>? AND ' + \
+                                   # 'danceability<>? AND ' + \
                                    'duration<>? AND ' + \
                                    'key<>? AND ' + \
-                                   #'energy<>? AND ' + \
+                                   # 'energy<>? AND ' + \
                                    'loudness<>? AND ' + \
                                    'year<>? AND ' + \
                                    'time_signature<>? AND ' + \
                                    'tempo<>?',
-                                   (0.0, 0.0, 0,0.0,  0, 0, 0.0)):
+                                   (0.0, 0.0, 0, 0.0, 0, 0, 0.0)):
             yield row[track_id_idx]
 
-            
 
-
-            
 class MillionSongLyricDatabase:
-    
     def __init__(self, db, mappings):
-        '''
-        db       -- Path to musiXmatch lyric database.
-        mappings -- Link to mappings file for lyric database. This should
+        """
+        :param db: Path to musiXmatch lyric database.
+        :param mappings: Link to mappings file for lyric database. This should
                     be a single-line file with comma-separated word values
                     corresponding the 5,000 reported BOW words for the
-                    musiXmatch dataset.
-        '''
+                    musixmatch data set.
+        """
         conn = sqlite3.connect(db)
         self.db = conn.cursor()
 
@@ -133,35 +137,38 @@ class MillionSongLyricDatabase:
         self._load_mappings(mappings)
 
     def _load_mappings(self, mappings_file):
-        '''
-        Loads BOW mappings from file. 
-        '''
+        """
+        Loads BOW mappings from file.
+        :param mappings_file:
+        :return:
+        """
         self.mappings = {}
         m = [line.rstrip('\n').split(',') for line in open(mappings_file)][0]
         for i, word in enumerate(m):
-            self.mappings.update({ word : i })
+            self.mappings.update({word: i})
 
     def get_bow_by_msd(self, track_id):
-        '''
+        """
         Returns the BOW for a given MSD track ID, or an array of 0 counts if
         no track with the given ID is found in the database..
-        '''
+        :param track_id:
+        :return:
+        """
         try:
             results = self.db.execute('SELECT track_id, word, count from lyrics WHERE track_id=?', (track_id,))
             bow = [0] * len(self.mappings)
             for r in results:
-                word  = r[1]
+                word = r[1]
                 count = r[2]
                 bow[self.mappings[word]] = count
         except:
             bow = [0] * len(self.mappings)
         return bow
-            
-            
+
     def get_songs_with_lyrics(self):
-        '''
+        """
         Returns a list of all songs in the lyric database by MSD track ID.
-        '''
+        """
         try:
             for row in self.db.execute('SELECT track_id from lyrics'):
                 yield row[0]
@@ -169,12 +176,15 @@ class MillionSongLyricDatabase:
             pass
 
 
-
-
-            
 class MillionSongDataset:
-
     def __init__(self, features, lyrics, lyric_mappings, tracks):
+        """
+
+        :param features:
+        :param lyrics:
+        :param lyric_mappings:
+        :param tracks:
+        """
         # Initialize lyric and feature databases.
         self._fdb = MillionSongFeatureDatabase(features)
         self._ldb = MillionSongLyricDatabase(lyrics, lyric_mappings)
@@ -184,52 +194,67 @@ class MillionSongDataset:
         for line in [line.rstrip() for line in open(tracks)]:
             self.tracks.append(line)
 
-        self.train    = []
+        self.train = []
         self.validate = []
-        self.test     = []
+        self.test = []
 
     def generate_track_list(self):
-        '''
+        """
         Generates a list of songs with both full features and lyrics and
         saves to a target file.
-        '''
-        with_lyrics   = set(self._ldb.get_songs_with_lyrics())
+        :return: None
+        """
+        with_lyrics = set(self._ldb.get_songs_with_lyrics())
         with_features = set(self._fdb.get_songs_with_all_features())
-        with_both     = with_lyrics.intersection(with_features)
+        with_both = with_lyrics.intersection(with_features)
+
         with open('tracks.txt', 'wb') as f:
             for t in with_both:
                 f.write('%s\n' % t)
 
     def load_track_list(self, f):
+        """
+
+        :param f:
+        :return: None
+        """
         for line in [line.rstrip for line in open(f)]:
             self.tracks += [line]
 
     def get_features(self, track_ids):
+        """
+
+        :param track_ids:
+        :return:
+        """
         return self._fdb.get_features_by_msd_list(track_ids)
 
     def get_bow(self, track_ids):
+        """
+
+        :param track_ids:
+        :return:
+        """
         for t in track_ids:
             yield self._ldb.get_bow_by_msd(t)
 
     def generate_split(self, train, validate, test, total=147000):
-        '''
+        """
         Generates a train/validate/test split of the data.
-        train = [0,1] portion used for training
-        test = [0,1] portion used for validate
-        validate = [0,1] portion used for test
-        total = total number of examples used from all 3.
-        '''
+        :param train: [0,1] portion used for training
+        :param validate: [0,1] portion used for validate
+        :param test: [0,1] portion used for test
+        :param total: total number of examples used from all 3.
+        :return: None
+        """
         assert(train + test + validate == 1.0)
 
         total = min(total, len(self.tracks))
         end_train = int(total*train)
         end_validate = int(total*validate) + end_train
-        self.train    = self.tracks[:end_train]
+        self.train = self.tracks[:end_train]
         self.validate = self.tracks[end_train:end_validate]
-        self.test     = self.tracks[end_validate:total]
-
-
-
+        self.test = self.tracks[end_validate:total]
 
 
 # features       = '../Data/msongs.db'
@@ -259,7 +284,3 @@ db.generate_split(0.75, 0.10, 0.15, 5000)
 features = [t.vector() for t in db.get_features(db.train)]
 bow = [bow for bow in db.get_bow(db.train)]
 '''
-
-
-
-
