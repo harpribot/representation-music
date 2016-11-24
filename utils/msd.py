@@ -232,17 +232,17 @@ class MillionSongDataset:
 
 
 
-features       = '../Data/msongs.db'
-lyrics         = '../Data/mxm_dataset.db'
-lyric_mappings = '../Data/bow.txt'
-tracks         = '../Data/tracks.txt'
-db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
+# features       = '../Data/msongs.db'
+# lyrics         = '../Data/mxm_dataset.db'
+# lyric_mappings = '../Data/bow.txt'
+# tracks         = '../Data/tracks.txt'
+# db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
 
-db.generate_split(0.75, 0.10, 0.15, 40)
+# db.generate_split(0.75, 0.10, 0.15, 40)
 
-print len(db.train)
-print len(db.validate)
-print len(db.test)
+# print len(db.train)
+# print len(db.validate)
+# print len(db.test)
 
 
 '''    
