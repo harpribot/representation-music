@@ -1,23 +1,18 @@
 import os
 import time
-
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-
+from Models.low_level_sharing_model import LowLevelSharingModel
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
-from Models.high_level_sharing_model import HighLevelSharingModel
-from Models.interspersed_sharing_model import InterspersedSharingModel
-from Models.low_level_sharing_model import LowLevelSharingModel
-from utils.msd import MillionSongDataset
-from utils.params import BATCH_SIZE, NUM_EPOCHS, FREQ_OF_CHECKPOINTS, FREQ_OF_EVALUATIONS, LEARNING_RATE
-from utils.params import EXPT_DIRECTORY_PATH, FEATURES, LYRICS, LYRIC_MAPPINGS, TRACKS
-from utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_FRACTION, TOTAL_NUM_EXAMPLES
-from utils.params import Task
+from utils.data_utils.labels import Labels
+from utils.network_utils.params import BATCH_SIZE, NUM_EPOCHS, LEARNING_RATE
+from utils.training_utils.params import FREQ_OF_CHECKPOINTS, FREQ_OF_EVALUATIONS
+from utils.data_utils.data_handler import fetch_data, create_experiment
 
 
-class Experiment():
+class Experiment(object):
     def __init__(self, task_ids,
                  x_train, x_validate, x_test, y_train, y_validate, y_test, model_class, expt_name):
         """
@@ -46,12 +41,10 @@ class Experiment():
         self.optimizer = None
         self.saver = None
 
-        input_dimension = self.x_train.shape[1]
-        output_dimensions = {}
-        for task_id in task_ids:
-            output_dimensions[task_id] = self.y_train[task_id].shape[1]
-
-        self.model = model_class(task_ids, input_dimension, output_dimensions)
+        self.input_dimension = self.x_train.shape[1]
+        self.train_samples = self.x_train.shape[0]
+        self.output_dimensions = {task_id: self.y_train[task_id].shape[1] for task_id in task_ids}
+        self.model = model_class(task_ids, self.input_dimension, self.output_dimensions)
 
         # Dictionary of list of training errors indexed by task-identifiers. Each list contains errors of the model
         # on the training set for that task over the course of training.
@@ -62,9 +55,13 @@ class Experiment():
         self.validation_errors = {}
 
         self._initialize_error_dictionaries()
-        self._create_expt_directory(expt_name)
+        create_experiment(expt_name)
 
     def initialize_network(self):
+        """
+        Initializes the DNN network
+        :return: None
+        """
         self.sess = tf.InteractiveSession()
         self.model.create_model()
         self._initialize_trainer()
@@ -72,6 +69,10 @@ class Experiment():
         self.saver = tf.train.Saver()
 
     def train(self):
+        """
+        Trains the network
+        :return: None
+        """
         print("Starting training")
         step = 0
         start_time = time.time()
@@ -108,29 +109,19 @@ class Experiment():
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
 
     def _initialize_error_dictionaries(self):
+        """
+        Initialize the dictionaries for training and validation error
+        :return: None
+        """
         for task_id in self.task_ids:
             self.training_errors[task_id] = []
             self.validation_errors[task_id] = []
 
-    def _create_expt_directory(self, expt_name):
+    def _initialize_trainer(self):
         """
-        Creates a directory for this experiment where all the logs and outputs are saved. The directory is named
-        after the experiment-name suffixed with a 4-digit random number. The 
-        :param expt_name: Experiment name.
+        Initializes the training optimizer
         :return: None
         """
-        os.chdir(EXPT_DIRECTORY_PATH)   # Change working directory to the Experiments folder
-        expt_dir = expt_name + "-" + str(np.random.randint(1000, 9999))
-        try:
-            os.makedirs(expt_dir)
-        except OSError:
-            if not os.path.isdir(expt_dir):
-                raise
-        finally:
-            os.chdir("./" + expt_dir)   # Change working directory to the newly created folder
-            print("Experiment Directory: " + expt_dir)
-
-    def _initialize_trainer(self):
         self.cost = mse(0., 0.)
         for task_id in self.task_ids:
             self.cost += self.model.get_layer(task_id + '-loss')
@@ -138,25 +129,31 @@ class Experiment():
         opt = Optimizer(self.cost)
         self.optimizer = opt.get_adagrad(LEARNING_RATE)
 
-    def _iterate_minibatches(self, batchsize, shuffle=True):
-        """Yields list of indices for each minibatch. The last minibatch is not used because it usually has 
+    def _iterate_minibatches(self, batch_size, shuffle=True):
+        """
+        Yields list of indices for each minibatch. The last mini-batch is not used because it usually has
         a different size. Since training set is shuffled before creating minibatches, the training examples in the
-        ignored minibatches are used in some other minibatch in at least one epoch with high probability.
-        :param batchsize: Size of each minibatch
+        ignored mini-batches are used in some other mini-batch in at least one epoch with high probability.
+
+        :param batch_size: Size of each minibatch
         :param shuffle: Boolean to be set to True if the training set needs to be shuffled at each epoch.
-        :yield: List of indices corresponding to a minibatch
+        :return List of indices corresponding to a mini-batch
         """
         num_input = self.x_train.shape[0]
         indices = np.arange(num_input)
         if shuffle:
             np.random.shuffle(indices)
-        for start_idx in range(0, num_input - batchsize + 1, batchsize):
-            minibatch = indices[start_idx:start_idx + batchsize]
+        for start_idx in range(0, num_input - batch_size + 1, batch_size):
+            minibatch = indices[start_idx:start_idx + batch_size]
             yield minibatch
 
     def _training_errors(self):
-        """Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
-        task on the training set."""
+        """
+        Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
+        task on the training set.
+
+        :return dictionary of training errors
+        """
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.x_train
         for id_ in self.task_ids:
@@ -167,8 +164,12 @@ class Experiment():
         return errors
 
     def _validation_errors(self):
-        """Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
-        task on the training set."""
+        """
+        Returns a dictionary of errors indexed by task identifiers where each element denotes the error for that
+        task on the training set.
+
+        :return dictionary of validation errors
+        """
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.x_validate
         for id_ in self.task_ids:
@@ -179,7 +180,11 @@ class Experiment():
         return errors
 
     def _plot_errors(self):
-        """Plots and saves the error curves for all the tasks."""
+        """
+        Plots and saves the error curves for all the tasks.
+
+        return None
+        """
         for task_id in self.task_ids:
             x = np.arange(len(self.training_errors))
             fig, ax = plt.subplots(1, 1)
@@ -190,42 +195,16 @@ class Experiment():
 
 
 def main():
-    """Runs the pipeline on the Million Songs Dataset."""
+    """Runs the pipeline on the Million Songs Data set."""
 
-    # List of Tasks to be used in the experiment.
-    task_ids = [Task.hotttnesss.value, Task.key.value, Task.loudness.value]
+    # List of Labels to be used in the experiment.
+    task_ids = [Labels.hotness.value, Labels.key.value, Labels.loudness.value]
 
-    # Load the dataset in memory.
-    db = MillionSongDataset(FEATURES, LYRICS, LYRIC_MAPPINGS, TRACKS)
-    # Generate train/validation/test splits.
-    db.generate_split(TRAIN_FRACTION, VALIDATE_FRACTION, TEST_FRACTION, TOTAL_NUM_EXAMPLES)
+    # Get the training, validation and testing set data and ground-truths
+    x_train, x_val, x_test, y_train, y_val, y_test = fetch_data(task_ids)
 
-    # Training set
-    print("Creating training set")
-    x_train = np.array([bow for bow in db.get_bow(db.train)], dtype=float)
-    labels_train = np.array([t.vector() for t in db.get_features(db.train)])
-
-    # Validation set
-    print("Creating validation set")
-    x_validate = np.array([bow for bow in db.get_bow(db.validate)], dtype=float)
-    labels_validate = np.array([t.vector() for t in db.get_features(db.validate)])
-
-    # Testing set
-    print("Creating testing set")
-    x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
-    labels_test = np.array([t.vector() for t in db.get_features(db.test)])
-
-    # Build the label dictionary using tasks under consideration, discaring other labels.
-    y_train = {}
-    y_validate = {}
-    y_test = {}
-    for task_id in task_ids:
-        y_train[task_id] = np.array(labels_train[:,int(task_id)], dtype=float).reshape(-1, 1)
-        y_validate[task_id] = np.array(labels_validate[:,int(task_id)], dtype=float).reshape(-1, 1)
-        y_test[task_id] = np.array(labels_test[:,int(task_id)], dtype=float).reshape(-1, 1)
-
-    exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
-                     x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
+    exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_val,
+                     x_test=x_test, y_train=y_train, y_validate=y_val, y_test=y_test,
                      model_class=LowLevelSharingModel)
     exp.initialize_network()
     exp.train()
@@ -265,7 +244,6 @@ def dummy():
     exp.initialize_network()
     exp.train()
     print("Training complete. Logs, outputs, and model saved in " + os.getcwd())
-
 
 if __name__ == '__main__':
     dummy()
