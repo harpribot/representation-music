@@ -51,6 +51,7 @@ class MillionSongFeatureDatabase:
 
     def __init__(self, db):
         conn = sqlite3.connect(db)
+        print db
         self.db = conn.cursor()
         self._fstart = 2 # Feature start index
 
@@ -141,11 +142,40 @@ class MillionSongLyricDatabase:
         for i, word in enumerate(m):
             self.mappings.update({ word : i })
 
+    def get_bow_by_msd_batch(self, track_ids):
+        # Create an integer mapping for each desired track ID.
+        track_mappings = {}
+        count = 0
+        for t in track_ids:
+            track_mappings.update({ t : count })
+            count += 1
+
+        # Initialize a BOW matrix for all desired tracks.
+        bow = [[0 for i in range(len(self.mappings))] for j in range(len(track_ids))]
+        
+        # Query database for all BOW and populate desired tracks.
+        results = self.db.execute('SELECT track_id, word, count from lyrics')
+
+        for r in results:
+            track_id = r[0]
+            word     = r[1]
+            count    = r[2]
+            try:
+                if track_id in track_mappings:
+                    bow[track_mappings[track_id]][self.mappings[word]] = count
+            except:
+                # Ignore key error. These occasionally arise from unicode nonsense.
+                pass
+        
+        return bow
+                
+                
+
     def get_bow_by_msd(self, track_id):
         '''
         Returns the BOW for a given MSD track ID, or an array of 0 counts if
         no track with the given ID is found in the database..
-        '''
+        '''        
         try:
             results = self.db.execute('SELECT track_id, word, count from lyrics WHERE track_id=?', (track_id,))
             bow = [0] * len(self.mappings)
@@ -154,6 +184,7 @@ class MillionSongLyricDatabase:
                 count = r[2]
                 bow[self.mappings[word]] = count
         except:
+            # Ignore key error. These occasionally arise from unicode nonsense.
             bow = [0] * len(self.mappings)
         return bow
             
@@ -207,9 +238,17 @@ class MillionSongDataset:
     def get_features(self, track_ids):
         return self._fdb.get_features_by_msd_list(track_ids)
 
+    '''
     def get_bow(self, track_ids):
+        count = 0
         for t in track_ids:
+            count += 1
+            print count
             yield self._ldb.get_bow_by_msd(t)
+    '''
+
+    def get_bow(self, track_ids):
+        return self._ldb.get_bow_by_msd_batch(track_ids)
 
     def generate_split(self, train, validate, test, total=147000):
         '''
@@ -238,11 +277,17 @@ lyric_mappings = '../Data/bow.txt'
 tracks         = '../Data/tracks.txt'
 db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
 
-db.generate_split(0.75, 0.10, 0.15, 40)
+db.generate_split(0.75, 0.10, 0.15)
 
 print len(db.train)
 print len(db.validate)
 print len(db.test)
+
+features = [t.vector() for t in db.get_features(db.train)]
+bow = [bow for bow in db.get_bow(db.train)]
+
+print bow[550]
+
 
 
 '''    
