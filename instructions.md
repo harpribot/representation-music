@@ -1,6 +1,6 @@
 How to train the model
 ======================
-cd to the project directory and execute `python experiment.py`. You can pass command-line arguments to set various hyperparameters; run `python experiment.py -h` for the usage guide. These arguments are optional; if they are passed, the default values specified in utils/network_utils/params.py and utils/training_utils/params.py will be used. Note that low-level hyperparameters such as network architechture; and choice of activation function, regularization technique, and iterative optimization procedure can only be tweaked by modifying the code.
+cd to the project directory and execute `python experiment.py`. You can pass command-line arguments to set various hyperparameters; run `python experiment.py -h` for the usage guide. These arguments are optional; if they are not passed, the default values specified in utils/network_utils/params.py and utils/training_utils/params.py will be used. Note that low-level hyperparameters such as network architechture; and choice of activation function, regularization technique, and iterative optimization procedure can only be tweaked by modifying the code.
 
 
 How to test the pipeline before using the MSD?
@@ -11,7 +11,7 @@ Note: The plotting function is not yet tested -- I can't get matplotlib to work 
 
 Changes to be done before running an experiment
 ================================================
-- Global variables in the utils/network_utils/params.py and utils/training_utils/params.py file. Some of these can be set through command-line arguments.
+- Global variables in the utils/network_utils/params.py and utils/training_utils/params.py file. Few of these can be set through command-line arguments.
 - `task_ids` in main method in experiment.py
 - `expt_name` argument passed to the constructor of `Experiment` class: Read the documentation for its description
 - `model_class` argument to the constructor of the `Experiment` class: The model to be used for the experiment
