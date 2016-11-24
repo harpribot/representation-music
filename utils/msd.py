@@ -221,12 +221,12 @@ class MillionSongDataset:
         '''
         assert(train + test + validate == 1.0)
 
-        total = float(min(total, len(self.tracks)))
+        total = min(total, len(self.tracks))
         end_train = int(total*train)
-        end_validate = int(total*validate)
+        end_validate = int(total*validate) + end_train
         self.train    = self.tracks[:end_train]
         self.validate = self.tracks[end_train:end_validate]
-        self.test     = self.tracks[end_validate:]
+        self.test     = self.tracks[end_validate:total]
 
 
 
@@ -237,6 +237,12 @@ lyrics         = '../Data/mxm_dataset.db'
 lyric_mappings = '../Data/bow.txt'
 tracks         = '../Data/tracks.txt'
 db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
+
+db.generate_split(0.75, 0.10, 0.15, 40)
+
+print len(db.train)
+print len(db.validate)
+print len(db.test)
 
 
 '''    
