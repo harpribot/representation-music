@@ -1,8 +1,8 @@
+import tensorflow as tf
 import os
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
 from Models.low_level_sharing_model import LowLevelSharingModel
