@@ -7,7 +7,17 @@ How to test the pipeline before using the MSD?
 ==============================================
 Run the "dummy" experiment that uses a small synthetic dataset to run the pipeline. Call the `dummy` method in the `__name__ == '__main__'` condition at the bottom of experiment.py. Use small values for `--num-epochs` (e.g., 5), `--evaluation-freq` (e.g., 5), and `--checkpoint-freq` (e.g., 10) to run this experiment. You should see periodic evaluation results on the screen, and model dumps and plots in a new directory created under the Experiments folder.
 
-Note: The plotting function is not yet tested -- I can't get matplotlib to work on my machine! It might throw errors which can, hopefully, be fixed easily.
+
+Errors in plotting?
+========================
+There might be errors due to matplotlib and display environment on the machine. If you don't want error curves to be plotted on the fly, comment out the `self._plot_errors()` call on line 117 in experiment.py. The errors are printed on screen anyway, so you can plot them later too.
+
+
+How to run experiment on MSD?
+=============================
+Call `main` function instead of `dummy` at the bottom of experiment.py with the same argument.
+If you want to use only a subset of the MSD dataset, set `TOTAL_NUM_EXAMPLES` parameter in training_utils/params.py
+
 
 Changes to be done before running an experiment
 ================================================
