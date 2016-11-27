@@ -1,8 +1,7 @@
 import sqlite3
+import os.path
 
 DEFAULT_VALUE = [0.0, 0.0, 0, 0.0, 0, 0, 0.0, []]
-
-
 class MSFeatures:
     def __init__(self, values=DEFAULT_VALUE):
         """
@@ -48,7 +47,9 @@ class MillionSongFeatureDatabase:
 
         :param db:
         """
-        conn = sqlite3.connect(db)
+	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+	db_path = os.path.join(BASE_DIR, db)
+	conn = sqlite3.connect(db_path)
         self.db = conn.cursor()
         self._fstart = 2  # Feature start index
 
@@ -126,7 +127,9 @@ class MillionSongLyricDatabase:
                     corresponding the 5,000 reported BOW words for the
                     musixmatch data set.
         """
-        conn = sqlite3.connect(db)
+       	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+	db_path = os.path.join(BASE_DIR, db)
+        conn = sqlite3.connect(db_path)
         self.db = conn.cursor()
 
         # The lyric database is built as a bag-of-words (BOW) for each song
