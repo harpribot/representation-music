@@ -119,6 +119,8 @@ class Experiment(object):
                 # Checkpoint the model periodically, including on the last epoch
                 if step % self.checkpoint_freq == 0 or epoch == self.num_epochs:
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
+                    print("Checkpoint dumped.\n Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
+                          .format(step, epoch, duration, t_errors, v_errors))
 
     def _initialize_error_dictionaries(self):
         """
