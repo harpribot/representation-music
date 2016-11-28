@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
-from Models.low_level_sharing_model import LowLevelSharingModel
+from Models.low_level_sharing_four_hidden import LowLevelSharingFourHiddenModel
 from utils.data_utils.labels import Labels
 from utils.data_utils.data_handler import fetch_data, create_experiment
 from utils.argument_parser import parse_arguments
@@ -222,8 +222,8 @@ def main(args):
 
     exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
-                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
@@ -264,8 +264,8 @@ def dummy(args):
 
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
-                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()

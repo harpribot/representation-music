@@ -1,10 +1,10 @@
 from model import Model
 
 
-class LowLevelSharingModel(Model):
+class InterspersedSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A low level sharing model
+        An interspersed sharing model with four hidden layers.
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
@@ -48,24 +48,22 @@ class LowLevelSharingModel(Model):
         id_act1 = self.add_activation_layer(input_layer_id=id_hidden1,
                                             layer_name='layer-1-relu')
 
-        # Second hidden layer; incoming weights are shared
+        # Second hidden layer; incoming weights are not shared
         # print 'Adding Hidden Layer 2 for Task-' + task_id
         id_hidden2 = self.add_hidden_layer(input_layer_id=id_act1,
                                            input_width=1024,
                                            output_width=512,
-                                           layer_name='layer-2',
-                                           sharing=True)
+                                           layer_name='layer-2')
 
         id_act2 = self.add_activation_layer(input_layer_id=id_hidden2,
                                             layer_name='layer-2-relu')
 
-        # Third hidden layer; incoming weights are shared
+        # Third hidden layer; incoming weights are not shared
         # print 'Adding Hidden Layer 3 for Task-' + task_id
         id_hidden3 = self.add_hidden_layer(input_layer_id=id_act2,
                                            input_width=512,
                                            output_width=256,
-                                           layer_name='layer-3',
-                                           sharing=True)
+                                           layer_name='layer-3')
 
         id_act3 = self.add_activation_layer(input_layer_id=id_hidden3,
                                             layer_name='layer-3-relu')
@@ -74,7 +72,7 @@ class LowLevelSharingModel(Model):
                                                 layer_name='layer-3-dropout',
                                                 dropout_ratio=0.5)
 
-        # Fourth hidden laye; incoming weights are not shared
+        # Fourth hidden layer; incoming weights are not shared
         # print 'Adding Hidden Layer 4 for Task-' + task_id
         id_hidden4 = self.add_hidden_layer(input_layer_id=id_reg3,
                                            input_width=256,

@@ -4,7 +4,7 @@ from model import Model
 class HighLevelSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A high level sharing model
+        A high level sharing model with four hidden layers.
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
