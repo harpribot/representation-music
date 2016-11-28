@@ -4,10 +4,10 @@ from model import Model
 class SingleTaskTwoHiddenModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A single task model with four hidden layers.
-        :param task_ids: List of task identifiers
+        A single task model with two hidden layers.
+        :param task_ids: The task ask identifier as a a single-element list
         :param input_dimension: Input dimension
-        :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
+        :param output_dimensions: Dictionary of output dimensions indexed by the task identifier.
         """
         assert len(task_ids) == 1, "Multiple tasks specified for a single-task model."
 
