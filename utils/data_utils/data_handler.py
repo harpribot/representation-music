@@ -4,6 +4,7 @@ from utils.training_utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_
 import numpy as np
 from utils.training_utils.params import EXPT_DIRECTORY_PATH
 import os
+import sys
 
 
 def fetch_data(task_ids):
@@ -17,19 +18,19 @@ def fetch_data(task_ids):
     # Generate train/validation/test splits.
     db.generate_split(TRAIN_FRACTION, VALIDATE_FRACTION, TEST_FRACTION, TOTAL_NUM_EXAMPLES)
 
-    print("------")
+    sys.stderr.write("------\n")
     # Training set
-    print("Creating training set")
+    sys.stderr.write("Creating training set\n")
     x_train = np.array([bow for bow in db.get_bow(db.train)], dtype=float)
     labels_train = np.array([t.vector() for t in db.get_features(db.train)])
 
     # Validation set
-    print("Creating validation set")
+    sys.stderr.write("Creating validation set\n")
     x_validate = np.array([bow for bow in db.get_bow(db.validate)], dtype=float)
     labels_val = np.array([t.vector() for t in db.get_features(db.validate)])
 
     # Testing set
-    print("Creating testing set")
+    sys.stderr.write("Creating testing set\n")
     x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
     labels_test = np.array([t.vector() for t in db.get_features(db.test)])
 
@@ -61,5 +62,5 @@ def create_experiment(expt_name):
             raise
     finally:
         os.chdir("./" + expt_dir)  # Change working directory to the newly created folder
-        print("------")
-        print("Experiment Directory: " + expt_dir)
+        sys.stderr.write("------\n")
+        sys.stderr.write("Experiment Directory: " + expt_dir + "\n")

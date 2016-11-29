@@ -220,8 +220,8 @@ def main(args):
                      batch_size=args.batch_size, num_epochs=args.num_epochs)
     exp.initialize_network()
     exp.train()
-    sys.stderr.write("------")
-    sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd())
+    sys.stderr.write("------\n")
+    sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd() + "\n")
 
 
 def dummy(args):

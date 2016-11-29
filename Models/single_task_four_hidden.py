@@ -1,3 +1,5 @@
+import sys
+
 from model import Model
 
 
@@ -24,7 +26,7 @@ class SingleTaskFourHiddenModel(Model):
 
         is_first = True
         task_id = self.task_ids[0]
-        print 'Creating network for Task-' + task_id
+        sys.stderr.write('Creating network for Task-' + task_id + '\n')
         self._create_network(task_id, input_layer_id, is_first)
         # is_first = False
 

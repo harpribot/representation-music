@@ -1,3 +1,5 @@
+import sys
+
 from model import Model
 
 
@@ -22,7 +24,7 @@ class LowLevelSharingFourHiddenModel(Model):
 
         is_first = True
         for task_id in self.task_ids:
-            print 'Creating network for Task-' + task_id
+            sys.stderr.write('Creating network for Task-' + task_id + '\n')
             self._create_network(task_id, input_layer_id, is_first)
             is_first = False
 
