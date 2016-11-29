@@ -243,7 +243,7 @@ def main(args):
     """
 
     # List of Labels to be used in the experiment.
-    task_ids = [Labels.hotness.value, Labels.key.value, Labels.loudness.value]
+    task_ids = [Labels.hotness.value, Labels.tempo.value, Labels.loudness.value]
 
     # Get the training, validation and testing set data and ground-truths
     x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
