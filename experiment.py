@@ -201,6 +201,8 @@ class Experiment(object):
         for task_id in self.task_ids:
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
+            ax.set_xlabel('Number of minibatch-SGD steps in the multiples of {}'.format(self.evaluation_freq))
+            ax.set_ylabel('Error')
             plt.plot(x, self.training_errors[task_id], 'r', label='training')
             plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
             plt.legend(loc="best", framealpha=0.3)
