@@ -4,7 +4,7 @@ A multi-task baseline experiment using interspersed sharing.
 Tasks:
 
 -- Hotness
--- Key
+-- Duration
 -- Year
 
 Model:
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     args = parse_arguments()
 
     # We will predict a single label for this experiment.
-    task_ids = [Labels.hotness.value, Labels.key.value, Labels.year.value]
+    task_ids = [Labels.hotness.value, Labels.duration.value, Labels.year.value]
 
     # Produce the training, validation, and testing set.
     x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
