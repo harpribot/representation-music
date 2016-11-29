@@ -139,6 +139,9 @@ class MillionSongLyricDatabase:
         self.mappings = {}
         self._load_mappings(mappings)
 
+    def close(self):
+        self.db.close()
+
     def _load_mappings(self, mappings_file):
         """
         Loads BOW mappings from file.
@@ -231,6 +234,10 @@ class MillionSongDataset:
         self.validate = []
         self.test = []
 
+    def close(self):
+        self._fdb.close()
+        self._ldb.close()
+
     def generate_track_list(self):
         """
         Generates a list of songs with both full features and lyrics and
@@ -298,17 +305,15 @@ class MillionSongDataset:
         self.test = self.tracks[end_validate:total]
 
 
-# features       = '../Data/msongs.db'
-# lyrics         = '../Data/mxm_dataset.db'
-# lyric_mappings = '../Data/bow.txt'
-# tracks         = '../Data/tracks.txt'
-# db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
-
-
-# print len(db.train)
-# print len(db.validate)
-# print len(db.test)
-
+if __name__ == '__main__':
+    features       = '../Data/msongs.db'
+    lyrics         = '../Data/mxm_dataset.db'
+    lyric_mappings = '../Data/bow.txt'
+    tracks         = '../Data/tracks.txt'
+    db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
+    db.generate_split(0.75, 0.15, 0.10)
+    features = [t.vector() for t in db.get_features(db.train)]
+    bow = [bow for bow in db.get_bow(db.train)]
 
 '''    
 # Sample Usage - Load the BOW and features for a single track.
