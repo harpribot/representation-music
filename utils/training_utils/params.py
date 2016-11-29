@@ -12,3 +12,4 @@ CHECKPOINT_FREQ = 900   # Number of mini-batch SGD steps after which a checkpoin
 
 # File paths
 EXPT_DIRECTORY_PATH = "./Experiments"  # Path of the Experiments directory
+EXPT_NAME = "default"

@@ -239,7 +239,7 @@ def main(args):
     # Get the training, validation and testing set data and ground-truths
     x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
 
-    exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
+    exp = Experiment(expt_name=args.experiment_name, task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
                      model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
                      batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
@@ -299,5 +299,6 @@ if __name__ == '__main__':
     sys.stderr.write("Number of epochs = " + str(args.num_epochs) + "\n")
     sys.stderr.write("Checkpoint frequency= " + str(args.checkpoint_freq) + "\n")
     sys.stderr.write("Evaluation frequency = " + str(args.evaluation_freq) + "\n")
+    sys.stderr.write("Experiment name = " + str(args.experiment_name) + "\n")
 
     dummy(args)
