@@ -87,11 +87,8 @@ class Experiment(object):
         """
         sys.stderr.write("------\n")
         sys.stderr.write("Starting training\n")
-        step = 0
         start_time = time.time()
         for epoch in xrange(1, self.num_epochs + 1):
-            if epoch == self.num_epochs:
-                sys.stderr.write("Last epoch. All minibatches will be evaluated and checkpointed.\n")
             for minibatch_indices in self._iterate_minibatches(self.batch_size):
                 feed_dict = dict()
                 feed_dict[self.model.get_layer('input')] = self.x_train[minibatch_indices]
@@ -100,7 +97,6 @@ class Experiment(object):
 
                 self.optimizer.run(session=self.sess, feed_dict=feed_dict)
 
-                step += 1
                 duration = int(time.time() - start_time)
 
                 # Evaluate model fairly often, including on the last epoch.
@@ -136,6 +132,23 @@ class Experiment(object):
                                      ", Training Errors: " + str(t_errors) +
                                      ", Validation Errors: " + str(v_errors) +
                                      "\n")
+
+            # Evaluate model at the end of each epoch.
+            # Print current errors on training and validation sets.
+            t_errors = self._training_errors()
+            v_errors = self._validation_errors()
+            sys.stderr.write("Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}\n"
+                  .format(epoch, duration, t_errors, v_errors))
+
+            # Add current errors to the cummulative errors list for plotting.
+            for task_id in self.task_ids:
+                self.training_errors[task_id].append(t_errors[task_id])
+                self.validation_errors[task_id].append(v_errors[task_id])
+            self._plot_errors()
+
+            # Checkpoint the model.
+            self.saver.save(self.sess, 'epoch-' + str(epoch).zfill(8))
+            print("Checkpoint dumped.")
 
     def _initialize_error_dictionaries(self):
         """
@@ -217,7 +230,7 @@ class Experiment(object):
         for task_id in self.task_ids:
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
-            ax.set_xlabel('Number of minibatch-SGD steps in the multiples of {}'.format(self.evaluation_freq))
+            ax.set_xlabel('Number of epochs of training')           
             ax.set_ylabel('Error')
             plt.plot(x, self.training_errors[task_id], 'r', label='training')
             plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
@@ -297,7 +310,7 @@ if __name__ == '__main__':
     sys.stderr.write("Learning rate = " + str(args.learning_rate) + "\n")
     sys.stderr.write("Mini-batch size = " + str(args.batch_size) + "\n")
     sys.stderr.write("Number of epochs = " + str(args.num_epochs) + "\n")
-    sys.stderr.write("Checkpoint frequency= " + str(args.checkpoint_freq) + "\n")
+    sys.stderr.write("Checkpoint frequency = " + str(args.checkpoint_freq) + "\n")
     sys.stderr.write("Evaluation frequency = " + str(args.evaluation_freq) + "\n")
     sys.stderr.write("Experiment name = " + str(args.experiment_name) + "\n")
 
