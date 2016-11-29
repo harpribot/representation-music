@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
-from Models.low_level_sharing_model import LowLevelSharingModel
+from Models.low_level_sharing_four_hidden import LowLevelSharingFourHiddenModel
 from utils.data_utils.labels import Labels
 from utils.data_utils.data_handler import fetch_data, create_experiment
 from utils.argument_parser import parse_arguments
@@ -119,6 +119,7 @@ class Experiment(object):
                 # Checkpoint the model periodically, including on the last epoch
                 if step % self.checkpoint_freq == 0 or epoch == self.num_epochs:
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
+                    print("Checkpoint dumped.\n Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}".format(step, epoch, duration, t_errors, v_errors))
 
     def _initialize_error_dictionaries(self):
         """
@@ -200,6 +201,8 @@ class Experiment(object):
         for task_id in self.task_ids:
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
+            ax.set_xlabel('Number of minibatch-SGD steps in the multiples of {}'.format(self.evaluation_freq))
+            ax.set_ylabel('Error')
             plt.plot(x, self.training_errors[task_id], 'r', label='training')
             plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
             plt.legend(loc="best", framealpha=0.3)
@@ -222,8 +225,8 @@ def main(args):
 
     exp = Experiment(expt_name="some-meaningful-name", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
-                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
@@ -264,8 +267,8 @@ def dummy(args):
 
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate, batch_size=args.batch_size,
-                     num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
+                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()

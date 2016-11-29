@@ -4,7 +4,7 @@ from model import Model
 class InterspersedSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        An interspersed sharing model
+        An interspersed sharing model with four hidden layers.
         :param task_ids: List of task identifiers
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
