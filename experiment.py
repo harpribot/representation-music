@@ -14,7 +14,7 @@ from utils.argument_parser import parse_arguments
 
 class Experiment(object):
     def __init__(self, task_ids, x_train, x_validate, x_test, y_train, y_validate, y_test, model_class, expt_name,
-                 learning_rate, batch_size, num_epochs, checkpoint_freq, evaluation_freq):
+                 learning_rate, batch_size, num_epochs):
         """
         Class to run experiments.
         :param task_ids: List of task identifiers
@@ -30,8 +30,6 @@ class Experiment(object):
         :param learning_rate: Learning rate for SGD-based optimization.
         :param batch_size: Size of mini-batches for SGD-based training.
         :param num_epochs: Number of epochs -- full pass over the training set.
-        :param checkpoint_freq: Number of mini-batch SGD steps after which an evaluation is performed.
-        :param evaluation_freq: Number of mini-batch SGD steps after which a checkpoint is taken.
         :return: None
         """
         self.task_ids = task_ids
@@ -45,8 +43,6 @@ class Experiment(object):
         self.learning_rate = learning_rate
         self.batch_size = batch_size
         self.num_epochs = num_epochs
-        self.checkpoint_freq = checkpoint_freq
-        self.evaluation_freq = evaluation_freq
 
         self.sess = None
         self.optimizer = None
@@ -255,8 +251,7 @@ def main(args):
     exp = Experiment(expt_name=args.experiment_name, task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
                      model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
-                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
-                     evaluation_freq=args.evaluation_freq)
+                     batch_size=args.batch_size, num_epochs=args.num_epochs)
     exp.initialize_network()
     exp.train()
     sys.stderr.write("------")
@@ -297,8 +292,7 @@ def dummy(args):
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
                      model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
-                     batch_size=args.batch_size, num_epochs=args.num_epochs, checkpoint_freq=args.checkpoint_freq,
-                     evaluation_freq=args.evaluation_freq)
+                     batch_size=args.batch_size, num_epochs=args.num_epochs)
     exp.initialize_network()
     exp.train()
     sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd())
@@ -310,8 +304,6 @@ if __name__ == '__main__':
     sys.stderr.write("Learning rate = " + str(args.learning_rate) + "\n")
     sys.stderr.write("Mini-batch size = " + str(args.batch_size) + "\n")
     sys.stderr.write("Number of epochs = " + str(args.num_epochs) + "\n")
-    sys.stderr.write("Checkpoint frequency = " + str(args.checkpoint_freq) + "\n")
-    sys.stderr.write("Evaluation frequency = " + str(args.evaluation_freq) + "\n")
     sys.stderr.write("Experiment name = " + str(args.experiment_name) + "\n")
 
     dummy(args)

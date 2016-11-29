@@ -1,7 +1,7 @@
 import argparse
 
 from utils.network_utils.params import LEARNING_RATE, BATCH_SIZE, NUM_EPOCHS
-from utils.training_utils.params import CHECKPOINT_FREQ, EVALUATION_FREQ, EXPT_NAME
+from utils.training_utils.params import EXPT_NAME
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -15,12 +15,6 @@ def parse_arguments():
                         help="Mini-batch size for SGD-based training", dest='batch_size')
     parser.add_argument('--num-epochs', nargs='?', type=int, default=NUM_EPOCHS, const=NUM_EPOCHS,
                         help="Number of epochs -- number of passes over the entire training set.", dest='num_epochs')
-    parser.add_argument('--evaluation-freq', nargs='?', type=int, default=EVALUATION_FREQ, const=EVALUATION_FREQ,
-                        help="""Number of mini-batch-SGD steps after which the trained network should be evaluated on 
-                        the training and validation steps.""", dest='evaluation_freq')
-    parser.add_argument('--checkpoint-freq', nargs='?', type=int, default=CHECKPOINT_FREQ, const=EVALUATION_FREQ,
-                        help="""Number of mini-batch-SGD steps after which the trained network should be 
-                        checkpointed.""", dest='checkpoint_freq')
     parser.add_argument('--experiment-name', nargs='?', type=str, default=EXPT_NAME, const=EXPT_NAME,
                         help="""Name of the experiment to be used to name the experiment's directory""",
                         dest='experiment_name')
