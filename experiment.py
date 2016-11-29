@@ -1,4 +1,5 @@
 import tensorflow as tf
+import sys
 import os
 import time
 import matplotlib.pyplot as plt
@@ -73,7 +74,7 @@ class Experiment(object):
         :return: None
         """
         self.sess = tf.InteractiveSession()
-        print("------")
+        sys.stderr.write("------\n")
         self.model.create_model()
         self._initialize_trainer()
         self.sess.run(tf.initialize_all_variables())
@@ -84,13 +85,13 @@ class Experiment(object):
         Trains the network
         :return: None
         """
-        print("------")
-        print("Starting training")
+        sys.stderr.write("------\n")
+        sys.stderr.write("Starting training\n")
         step = 0
         start_time = time.time()
         for epoch in xrange(1, self.num_epochs + 1):
             if epoch == self.num_epochs:
-                print("Last epoch. All minibatches will be evaluated and checkpointed.")
+                sys.stderr.write("Last epoch. All minibatches will be evaluated and checkpointed.\n")
             for minibatch_indices in self._iterate_minibatches(self.batch_size):
                 feed_dict = dict()
                 feed_dict[self.model.get_layer('input')] = self.x_train[minibatch_indices]
@@ -107,8 +108,14 @@ class Experiment(object):
                     # Print current errors on training and validation sets.
                     t_errors = self._training_errors()
                     v_errors = self._validation_errors()
-                    print("Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
-                          .format(step, epoch, duration, t_errors, v_errors))
+                    # print("Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
+                    #      .format(step, epoch, duration, t_errors, v_errors))
+                    sys.stderr.write("Steps: " + str(step) +
+                                     ", Epoch: " + str(epoch) +
+                                     ", Duration: " + str(duration) +
+                                     ", Training Errors: " + str(t_errors) +
+                                     ", Validation Errors: " + str(v_errors) +
+                                     "\n")
 
                     # Add current errors to the cummulative errors list for plotting.
                     for task_id in self.task_ids:
@@ -119,7 +126,16 @@ class Experiment(object):
                 # Checkpoint the model periodically, including on the last epoch
                 if step % self.checkpoint_freq == 0 or epoch == self.num_epochs:
                     self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
-                    print("Checkpoint dumped.\n Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}".format(step, epoch, duration, t_errors, v_errors))
+                    # print("Checkpoint dumped.\n "
+                    #      "Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
+                    #      .format(step, epoch, duration, t_errors, v_errors))
+                    sys.stderr.write("Checkpoint dumped.\n" +
+                                     "Steps: " + str(step) +
+                                     ", Epoch: " + str(epoch) +
+                                     ", Duration: " + str(duration) +
+                                     ", Training Errors: " + str(t_errors) +
+                                     ", Validation Errors: " + str(v_errors) +
+                                     "\n")
 
     def _initialize_error_dictionaries(self):
         """
@@ -230,8 +246,8 @@ def main(args):
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
-    print("------")
-    print("Training complete. Logs, outputs, and model saved in " + os.getcwd())
+    sys.stderr.write("------")
+    sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd())
 
 
 def dummy(args):
@@ -272,16 +288,16 @@ def dummy(args):
                      evaluation_freq=args.evaluation_freq)
     exp.initialize_network()
     exp.train()
-    print("Training complete. Logs, outputs, and model saved in " + os.getcwd())
+    sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd())
 
 
 if __name__ == '__main__':
     args = parse_arguments()
-    print("Using the following values for hyperparameters:")
-    print("Learning rate = {}".format(args.learning_rate))
-    print("Mini-batch size = {}".format(args.batch_size))
-    print("Number of epochs = {}".format(args.num_epochs))
-    print("Checkpoint frequency= {}".format(args.checkpoint_freq))
-    print("Evaluation frequency = {}".format(args.evaluation_freq))
+    sys.stderr.write("Using the following values for hyperparameters:")
+    sys.stderr.write("Learning rate = " + str(args.learning_rate) + "\n")
+    sys.stderr.write("Mini-batch size = " + str(args.batch_size) + "\n")
+    sys.stderr.write("Number of epochs = " + str(args.num_epochs) + "\n")
+    sys.stderr.write("Checkpoint frequency= " + str(args.checkpoint_freq) + "\n")
+    sys.stderr.write("Evaluation frequency = " + str(args.evaluation_freq) + "\n")
 
     dummy(args)
