@@ -19,13 +19,17 @@ class MSFeatures:
         :param values: The values provided
         """
         self.hotness = values[0]
-        self.duration = values[1]
-        self.key = values[2]
-        self.loudness = values[3]
-        self.year = values[4]
-        self.time_signature = values[5]
-        self.tempo = values[6]
-        self.tags = values[7]
+        # For some reason, this is not populated in MSD.
+        #self.danceability = values[1]
+        self.duration = values[2]
+        self.key = values[3]
+        # For some reason, this is not populated in MSD.
+        #self.energy = values[4]
+        self.loudness = values[5]
+        self.year = values[6]
+        self.time_signature = values[7]
+        self.tempo = values[8]
+        self.tags = values[9]
 
     def vector(self):
         """
@@ -311,9 +315,12 @@ if __name__ == '__main__':
     lyric_mappings = '../Data/bow.txt'
     tracks         = '../Data/tracks.txt'
     db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
-    db.generate_split(0.75, 0.15, 0.10)
+    db.generate_split(0.05, 0.15, 0.80)
     features = [t.vector() for t in db.get_features(db.train)]
     bow = [bow for bow in db.get_bow(db.train)]
+
+    for f in features:
+        print f
 
 '''    
 # Sample Usage - Load the BOW and features for a single track.
