@@ -33,6 +33,9 @@ def fetch_data(task_ids):
     x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
     labels_test = np.array([t.vector() for t in db.get_features(db.test)])
 
+    # Close databases to free memory.
+    db.close()
+
     # Build the label dictionary using tasks under consideration, discarding other labels.
     y_train = {task_id: np.array(labels_train[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
     y_val = {task_id: np.array(labels_val[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
