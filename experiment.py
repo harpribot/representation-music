@@ -95,46 +95,12 @@ class Experiment(object):
 
                 duration = int(time.time() - start_time)
 
-                # Evaluate model fairly often, including on the last epoch.
-                if step % self.evaluation_freq == 0 or epoch == self.num_epochs:
-                    # Print current errors on training and validation sets.
-                    t_errors = self._training_errors()
-                    v_errors = self._validation_errors()
-                    # print("Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
-                    #      .format(step, epoch, duration, t_errors, v_errors))
-                    sys.stderr.write("Steps: " + str(step) +
-                                     ", Epoch: " + str(epoch) +
-                                     ", Duration: " + str(duration) +
-                                     ", Training Errors: " + str(t_errors) +
-                                     ", Validation Errors: " + str(v_errors) +
-                                     "\n")
-
-                    # Add current errors to the cummulative errors list for plotting.
-                    for task_id in self.task_ids:
-                        self.training_errors[task_id].append(t_errors[task_id])
-                        self.validation_errors[task_id].append(v_errors[task_id])
-                    self._plot_errors()
-
-                # Checkpoint the model periodically, including on the last epoch
-                if step % self.checkpoint_freq == 0 or epoch == self.num_epochs:
-                    self.saver.save(self.sess, 'checkpoint-' + str(step).zfill(8))
-                    # print("Checkpoint dumped.\n "
-                    #      "Step: {}, Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}"
-                    #      .format(step, epoch, duration, t_errors, v_errors))
-                    sys.stderr.write("Checkpoint dumped.\n" +
-                                     "Steps: " + str(step) +
-                                     ", Epoch: " + str(epoch) +
-                                     ", Duration: " + str(duration) +
-                                     ", Training Errors: " + str(t_errors) +
-                                     ", Validation Errors: " + str(v_errors) +
-                                     "\n")
-
             # Evaluate model at the end of each epoch.
             # Print current errors on training and validation sets.
             t_errors = self._training_errors()
             v_errors = self._validation_errors()
             sys.stderr.write("Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}\n"
-                  .format(epoch, duration, t_errors, v_errors))
+                             .format(epoch, duration, t_errors, v_errors))
 
             # Add current errors to the cummulative errors list for plotting.
             for task_id in self.task_ids:
