@@ -1,10 +1,10 @@
 from model import Model
 
 
-class SingleTaskTwoHiddenModel(Model):
+class SingleTaskThreeHiddenModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
-        A single task model with two hidden layers.
+        A single task model with three hidden layers.
         :param task_ids: The task ask identifier as a a single-element list
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by the task identifier.
@@ -49,15 +49,11 @@ class SingleTaskTwoHiddenModel(Model):
         id_act1 = self.add_activation_layer(input_layer_id=id_hidden1,
                                             layer_name='layer-1-relu')
 
-        id_reg1 = self.add_regularization_layer(input_layer_id=id_act1,
-                                                layer_name='layer-1-dropout',
-                                                dropout_ratio=0.5)
-
         # Second hidden layer;
         # print 'Adding Hidden Layer 2 for Task-' + task_id
-        id_hidden2 = self.add_hidden_layer(input_layer_id=id_reg1,
+        id_hidden2 = self.add_hidden_layer(input_layer_id=id_act1,
                                            input_width=1024,
-                                           output_width=128,
+                                           output_width=256,
                                            layer_name='layer-2')
 
         id_act2 = self.add_activation_layer(input_layer_id=id_hidden2,
@@ -67,9 +63,23 @@ class SingleTaskTwoHiddenModel(Model):
                                                 layer_name='layer-2-dropout',
                                                 dropout_ratio=0.5)
 
+        # Third hidden layer;
+        # print 'Adding Hidden Layer 3 for Task-' + task_id
+        id_hidden3 = self.add_hidden_layer(input_layer_id=id_reg2,
+                                           input_width=256,
+                                           output_width=128,
+                                           layer_name='layer-3')
+
+        id_act3 = self.add_activation_layer(input_layer_id=id_hidden3,
+                                            layer_name='layer-3-relu')
+
+        id_reg3 = self.add_regularization_layer(input_layer_id=id_act3,
+                                                layer_name='layer-3-dropout',
+                                                dropout_ratio=0.5)
+
         # Output layer
         # print 'Adding Output Layer for Task-' + task_id
-        prediction_id = self.add_output_layer(input_layer_id=id_reg2,
+        prediction_id = self.add_output_layer(input_layer_id=id_reg3,
                                               input_width=128,
                                               output_width=self.output_dimensions[task_id],
                                               layer_name='prediction')
