@@ -7,7 +7,7 @@ assert(TRAIN_FRACTION + VALIDATE_FRACTION + TEST_FRACTION == 1.0)
 
 # Validation and check pointing
 EVALUATION_FREQ = 1000   # Number of mini-batch SGD steps after which an evaluation is performed.
-CHECKPOINT_FREQ = 3000   # Number of mini-batch SGD steps after which a checkpoint is taken.
+CHECKPOINT_FREQ = 1000   # Number of mini-batch SGD steps after which a checkpoint is taken.
 
 # File paths
 EXPT_DIRECTORY_PATH = "./Experiments"  # Path of the Experiments directory
