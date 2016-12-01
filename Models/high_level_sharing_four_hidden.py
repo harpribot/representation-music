@@ -74,12 +74,13 @@ class HighLevelSharingModel(Model):
                                                 layer_name='layer-3-dropout',
                                                 dropout_ratio=0.5)
 
-        # Fourth hidden layer; incoming weights are not shared
+        # Fourth hidden layer; incoming weights are shared
         # print 'Adding Hidden Layer 4 for Task-' + task_id
         id_hidden4 = self.add_hidden_layer(input_layer_id=id_reg3,
                                            input_width=256,
                                            output_width=128,
-                                           layer_name='layer-4')
+                                           layer_name='layer-4',
+                                           sharing=True)
 
         id_act4 = self.add_activation_layer(input_layer_id=id_hidden4,
                                             layer_name='layer-4-relu')
