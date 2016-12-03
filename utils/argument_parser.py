@@ -3,6 +3,7 @@ import argparse
 from utils.network_utils.params import LEARNING_RATE, BATCH_SIZE, NUM_EPOCHS
 from utils.training_utils.params import EXPT_NAME
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description='''Train a Multi-Task deep neural network. Note: Only high-level hyperparameters can be set 

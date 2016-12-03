@@ -61,13 +61,12 @@ class LowLevelSharingFourHiddenModel(Model):
         id_act2 = self.add_activation_layer(input_layer_id=id_hidden2,
                                             layer_name='layer-2-relu')
 
-        # Third hidden layer; incoming weights are shared
+        # Third hidden layer; incoming weights are  not shared
         # print 'Adding Hidden Layer 3 for Task-' + task_id
         id_hidden3 = self.add_hidden_layer(input_layer_id=id_act2,
                                            input_width=512,
                                            output_width=256,
-                                           layer_name='layer-3',
-                                           sharing=True)
+                                           layer_name='layer-3')
 
         id_act3 = self.add_activation_layer(input_layer_id=id_hidden3,
                                             layer_name='layer-3-relu')

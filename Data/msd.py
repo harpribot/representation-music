@@ -1,7 +1,7 @@
 import sqlite3
 # import os.path
 
-DEFAULT_VALUE = [0.0, 0.0, 0, 0.0, 0, 0, 0.0, []]
+DEFAULT_VALUE = [0.0, 0.0, 0, 0.0, 0, 0, 0.0, [], []]
 class MSFeatures:
     def __init__(self, values=DEFAULT_VALUE):
         """
@@ -30,6 +30,20 @@ class MSFeatures:
         self.time_signature = values[7]
         self.tempo = values[8]
         self.tags = values[9]
+
+        # This is all the tags in a list. (A tag is a genre which this song
+        # identifies with.)
+        self.tagsList = self.tags.split('|')
+
+
+    def isGenre(self, genre):
+        if genre in self.tagsList:
+
+            # True
+            return 1
+        else:
+            return 0
+
 
     def vector(self):
         """
