@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dnn.loss import mse
 from dnn.optimizer import Optimizer
-from Models.low_level_sharing_four_hidden import LowLevelSharingFourHiddenModel
+from Models.low_level_sharing_four_hidden import LowLevelSharingModel
 from utils.data_utils.labels import Labels
 from utils.data_utils.data_handler import fetch_data, create_experiment
 from utils.argument_parser import parse_arguments
@@ -216,7 +216,7 @@ def main(args):
 
     exp = Experiment(expt_name=args.experiment_name, task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate,
                      batch_size=args.batch_size, num_epochs=args.num_epochs)
     exp.initialize_network()
     exp.train()
@@ -257,7 +257,7 @@ def dummy(args):
 
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
-                     model_class=LowLevelSharingFourHiddenModel, learning_rate=args.learning_rate,
+                     model_class=LowLevelSharingModel, learning_rate=args.learning_rate,
                      batch_size=args.batch_size, num_epochs=args.num_epochs)
     exp.initialize_network()
     exp.train()

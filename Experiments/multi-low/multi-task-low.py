@@ -17,7 +17,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 
 from Experiments.experiment import Experiment
-from Models.low_level_sharing_four_hidden import LowLevelSharingFourHiddenModel
+from Models.low_level_sharing_four_hidden import LowLevelSharingModel
 from utils.argument_parser import parse_arguments
 from utils.data_utils.data_handler import fetch_data
 from utils.data_utils.labels import Labels
@@ -37,7 +37,7 @@ if __name__ == '__main__':
                    task_ids=task_ids,
                    x_train=x_train, x_validate=x_validate, x_test=x_test,
                    y_train=y_train, y_validate=y_validate, y_test=y_test,
-                   model_class=LowLevelSharingFourHiddenModel,
+                   model_class=LowLevelSharingModel,
                    learning_rate=args.learning_rate,
                    batch_size=args.batch_size,
                    num_epochs=args.num_epochs)
