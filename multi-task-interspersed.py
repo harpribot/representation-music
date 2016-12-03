@@ -36,9 +36,7 @@ if __name__ == '__main__':
                    model_class=InterspersedSharingModel,
                    learning_rate=args.learning_rate,
                    batch_size=args.batch_size,
-                   num_epochs=args.num_epochs,
-                   checkpoint_freq=args.checkpoint_freq,
-                   evaluation_freq=args.evaluation_freq)
+                   num_epochs=args.num_epochs)
 
     e.initialize_network()
     e.train()
