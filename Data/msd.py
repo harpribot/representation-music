@@ -45,18 +45,23 @@ class MSFeatures:
             return 0
 
 
-    def vector(self):
+    def vector(self, tags=[]):
         """
+        Returns a feature vector of this song's features.
+        :param tags:    List of tags to include as binary features.
+        :return:        Vector of features.
+        """
+        standard_features = [self.hotness,
+                             self.duration,
+                             self.key,
+                             self.loudness,
+                             self.year,
+                             self.time_signature,
+                             self.tempo]
 
-        :return:
-        """
-        return [self.hotness,
-                self.duration,
-                self.key,
-                self.loudness,
-                self.year,
-                self.time_signature,
-                self.tempo]
+        tag_features = [self.isGenre(t) for t in tags]
+
+        return standard_features + tag_features
 
 
 class MillionSongFeatureDatabase:
@@ -329,8 +334,8 @@ if __name__ == '__main__':
     lyric_mappings = '../Data/bow.txt'
     tracks         = '../Data/tracks.txt'
     db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
-    db.generate_split(0.05, 0.15, 0.80)
-    features = [t.vector() for t in db.get_features(db.train)]
+    db.generate_split(0.05, 0.15, 0.80, 100)
+    features = [t.vector(['pop', 'pop rock']) for t in db.get_features(db.train)]
     bow = [bow for bow in db.get_bow(db.train)]
 
     for f in features:
