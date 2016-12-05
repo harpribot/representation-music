@@ -4,9 +4,8 @@
 #SBATCH -n 1                           # total number of gpu nodes requested
 #SBATCH -p gpu                         # queue (partition) -- normal, development, etc.
 #SBATCH -t 10:00:00                    # run time (hh:mm:ss) - 12 hours
-#SBATCH --mail-user=tyler@cs.utexas.edu
+#SBATCH --mail-user=harshal@cs.utexas.edu
 #SBATCH --mail-type=begin              # email me when the job starts
 #SBATCH --mail-type=end                # email me when the job finishes
 
-python Experiments/dummy/dummy.py --num-epochs 2
-# python Experiments/dummy/evaluate.py
+python ../Experiments/simple/single.py --task-type 'dependent_3'
