@@ -40,20 +40,30 @@ if __name__ == '__main__':
     
     to_run = { ('%s-tightly' % (EXPERIMENT_NAME)) : tightly_coupled,
                ('%s-loosely' % (EXPERIMENT_NAME)) : loosely_coupled }
+    
+    # These are the training sizes which we will test.
+    training_sizes = [500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 25000]
 
     for name, tasks in to_run.iteritems():      
         # Produce the training, validation, and test sets.
         x_train, x_validate, x_test, y_train, y_validate, y_test, task_ids = fetch_data(tasks)
         
-        # These are the training sizes which we will test.
-        training_sizes = [500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 25000]
         for size in training_sizes:
             # Create train sets.
             this_x_train = x_train[:size, :]
             this_y_train = {t_id: y_train[t_id][:size] for t_id in y_train.keys()}
         
             expt_name = ('%s-training%d' % (name, size))
-            print task_ids
+            
+            sys.stderr.write('Experiment Name:')
+            sys.stderr.write(str(name) + '\n')
+
+            sys.stderr.write('Experiment Tasks:')
+            sys.stderr.write(str(tasks) + '\n')
+
+            sys.stderr.write('Training Size:')
+            sys.stderr.write(str(size) + '\n')
+
             e = Experiment(task_ids = task_ids,
                            x_train=this_x_train, x_validate=x_validate, x_test=x_test,
                            y_train=this_y_train, y_validate=y_validate, y_test=y_test,
