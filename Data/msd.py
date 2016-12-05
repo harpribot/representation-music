@@ -86,7 +86,7 @@ class MSFeatures:
         :param tags:    List of tags to include as binary features.
         :return:        Vector of features.
         """
-        vector = [self.feature(t) for t in tags]
+        vector = [self.feature(f) for f in features]
 
         return vector 
 

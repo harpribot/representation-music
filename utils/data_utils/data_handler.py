@@ -1,5 +1,6 @@
 from Data.msd import MillionSongDataset
 from params import FEATURES, LYRICS, LYRIC_MAPPINGS, TRACKS
+from utils.data_utils.labels import Labels
 from utils.training_utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_FRACTION, TOTAL_NUM_EXAMPLES
 import numpy as np
 from utils.training_utils.params import EXPT_DIRECTORY_PATH
@@ -7,7 +8,7 @@ import os
 import sys
 
 
-def fetch_data(task_ids):
+def fetch_data(tasks):
     """
     Fetches the dataset from the Database and then divides it into training / testing / validation data
     :param task_ids: labels on which the network is trained
@@ -18,21 +19,25 @@ def fetch_data(task_ids):
     # Generate train/validation/test splits.
     db.generate_split(TRAIN_FRACTION, VALIDATE_FRACTION, TEST_FRACTION, TOTAL_NUM_EXAMPLES)
 
+    # Create a mapping from task to position of that task in output array.
+    task_ids = Labels(tasks)
+    task_ids = [str(task_ids.get(t)) for t in tasks]
+    
     sys.stderr.write("------\n")
     # Training set
     sys.stderr.write("Creating training set\n")
     x_train = np.array([bow for bow in db.get_bow(db.train)], dtype=float)
-    labels_train = np.array([t.vector() for t in db.get_features(db.train)])
+    labels_train = np.array([t.vector(tasks) for t in db.get_features(db.train)])
 
     # Validation set
     sys.stderr.write("Creating validation set\n")
     x_validate = np.array([bow for bow in db.get_bow(db.validate)], dtype=float)
-    labels_val = np.array([t.vector() for t in db.get_features(db.validate)])
+    labels_val = np.array([t.vector(tasks) for t in db.get_features(db.validate)])
 
     # Testing set
     sys.stderr.write("Creating testing set\n")
     x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
-    labels_test = np.array([t.vector() for t in db.get_features(db.test)])
+    labels_test = np.array([t.vector(tasks) for t in db.get_features(db.test)])
 
     # Close databases to free memory.
     db.close()
@@ -42,7 +47,7 @@ def fetch_data(task_ids):
     y_val = {task_id: np.array(labels_val[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
     y_test = {task_id: np.array(labels_test[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
 
-    return x_train, x_validate, x_test, y_train, y_val, y_test
+    return x_train, x_validate, x_test, y_train, y_val, y_test, task_ids
 
 
 def create_experiment(expt_name):
