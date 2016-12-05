@@ -131,6 +131,7 @@ def standardize_labels(train, validate, test, task_ids):
             task_standardized = preprocessing.scale(task_labels, axis=0)
         else:
             task_standardized = task_labels
+        task_standardized = np.expand_dims(task_standardized, axis=1)
         standardized = np.hstack((standardized, task_standardized))
 
     # Remove the stray all-zero first column.
