@@ -19,6 +19,7 @@ def parse_arguments():
     parser.add_argument('--experiment-name', nargs='?', type=str, default=EXPT_NAME, const=EXPT_NAME,
                         help="""Name of the experiment to be used to name the experiment's directory""",
                         dest='experiment_name')
+    parser.add_argument('--task-type', nargs='?', type=str, dest='task_type')
 
     results = parser.parse_args()
     return results
