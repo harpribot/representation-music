@@ -3,7 +3,7 @@ import sys
 from model import Model
 
 
-class LowLevelSharingFourHiddenModel(Model):
+class LowLevelSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A low level sharing model with four hidden layers.
