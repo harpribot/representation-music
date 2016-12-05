@@ -8,4 +8,4 @@
 #SBATCH --mail-type=begin              # email me when the job starts
 #SBATCH --mail-type=end                # email me when the job finishes
 
-python Experiments/multi-high-final/multi-high.py --task-type 'tightly_coupled' --num-epochs 2
+python Experiments/multi-high/multi-high.py --task-type 'tightly_coupled' --num-epochs 2
