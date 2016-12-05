@@ -111,7 +111,12 @@ class Experiment(object):
 
             # Checkpoint the model.
             self.saver.save(self.sess, 'epoch-' + str(epoch).zfill(8))
-            print("Checkpoint dumped.")
+            sys.stderr.write("Checkpoint dumped.\n")
+
+        self._post_training_cleanup()
+        sys.stderr.write("------\n")
+        sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd() + "\n\n\n")
+        sys.stderr.write("###################\n\n\n")
 
     def _initialize_error_dictionaries(self):
         """
@@ -221,6 +226,20 @@ class Experiment(object):
             plt.legend(loc="best", framealpha=0.3)
             fig.savefig("error-curve-task-{}.png".format(task_id))
         plt.close('all')
+
+    def _post_training_cleanup(self):
+        """Runs cleanup opertions after training is complete.task_id
+
+        1. Deletes the tf graph.
+        2. Closes tf session.
+        3. Changes directory to project directory.
+
+        Returns:
+            TYPE: Description
+        """
+        tf.reset_default_graph()
+        self.sess.close()
+        os.chdir("../../")
 
 
 def main(args):
