@@ -20,25 +20,29 @@ def fetch_data(tasks):
     # Generate train/validation/test splits.
     db.generate_split(TRAIN_FRACTION, VALIDATE_FRACTION, TEST_FRACTION, TOTAL_NUM_EXAMPLES)
 
-    # Create a mapping from task to position of that task in output array.
-    task_ids = Labels(tasks)
-    task_ids = [str(task_ids.get(t)) for t in tasks]
-    
+    # Actual names of the tasks (e.g., 'pop' or 'loudness')
+    task_labels = tasks.keys()
+    # Assign integer identifiers each label that serve as an indices into feature vector.
+    task_mappings = Labels(task_labels)
+    task_ids      = [task_mappings.get(t) for t in task_labels]
+    # Recreate input dictionary using integer labels for each task.
+    tasks = { str(task_mappings.get(t)) : tasks[t] for t in tasks.keys() }
+
     sys.stderr.write("------\n")
     # Training set
     sys.stderr.write("Creating training set\n")
     x_train = np.array([bow for bow in db.get_bow(db.train)], dtype=float)
-    labels_train = np.array([t.vector(tasks) for t in db.get_features(db.train)])
+    labels_train = np.array([t.vector(task_labels) for t in db.get_features(db.train)])
 
     # Validation set
     sys.stderr.write("Creating validation set\n")
     x_validate = np.array([bow for bow in db.get_bow(db.validate)], dtype=float)
-    labels_val = np.array([t.vector(tasks) for t in db.get_features(db.validate)])
+    labels_val = np.array([t.vector(task_labels) for t in db.get_features(db.validate)])
 
     # Testing set
     sys.stderr.write("Creating testing set\n")
     x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
-    labels_test = np.array([t.vector(tasks) for t in db.get_features(db.test)])
+    labels_test = np.array([t.vector(task_labels) for t in db.get_features(db.test)])
 
     # Close databases to free memory.
     db.close()
@@ -47,7 +51,7 @@ def fetch_data(tasks):
     y_train = {}
     y_val = {}
     y_test = {}
-    for task_id, loss_type in task_ids.iteritems():
+    for task_id, loss_type in tasks.iteritems():
         if loss_type is LossTypes.mse:
             y_train[task_id] = np.array(labels_train[:, int(task_id)], dtype=float).reshape(-1, 1)
             y_val[task_id] = np.array(labels_val[:, int(task_id)], dtype=float).reshape(-1, 1)
@@ -65,7 +69,7 @@ def fetch_data(tasks):
             labels = np.array(labels_test[:, int(task_id)], dtype=int).reshape(1, -1)
             y_test[task_id] = convert_to_one_hot(labels)
 
-    return x_train, x_validate, x_test, y_train, y_val, y_test, task_ids
+    return x_train, x_validate, x_test, y_train, y_val, y_test, tasks
 
 
 def create_experiment(expt_name):
