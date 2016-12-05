@@ -50,7 +50,7 @@ def fetch_data(tasks):
     labels_test = np.array([t.vector(task_labels) for t in db.get_features(db.test)])
 
     x_train, x_validate, x_test = standardize_input(x_train, x_validate, x_test)
-    labels_train, labels_val, labels_test = standardize_labels(labels_train, labels_val, labels_test, task_ids)
+    labels_train, labels_val, labels_test = standardize_labels(labels_train, labels_val, labels_test, tasks)
 
     # Close databases to free memory.
     db.close()
