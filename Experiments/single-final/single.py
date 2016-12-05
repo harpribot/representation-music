@@ -30,28 +30,49 @@ if __name__ == '__main__':
     args = parse_arguments()
 
     # Target tasks.
-    task = { 'pop' : LossTypes.cross_entropy }
-
-  
-    # Produce the training, validation, and test sets.
-    x_train, x_validate, x_test, y_train, y_validate, y_test, task_ids = fetch_data(tasks)
-        
+    task_target = { 'pop' : LossTypes.cross_entropy }
+    
+    # Dependent tasks.
+    task_dependent_1 = {'pop rock' : LossTypes.cross_entropy}
+    task_dependent_2 = {'ballad'   : LossTypes.cross_entropy}
+    task_dependent_3 = {'loudness' : LossTypes.mse}
+    task_dependent_4 = {'year'     : LossTypes.mse}
+    
+    to_run = { ('%s-target' % (EXPERIMENT_NAME)) : task_target,
+               ('%s-dependent1' % (EXPERIMENT_NAME)) : task_dependent_1,
+               ('%s-dependent2' % (EXPERIMENT_NAME)) : task_dependent_2,
+               ('%s-dependent3' % (EXPERIMENT_NAME)) : task_dependent_3,
+               ('%s-dependent4' % (EXPERIMENT_NAME)) : task_dependent_4}
+    
     # These are the training sizes which we will test.
     training_sizes = [500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 25000]
-    for size in training_sizes:
-        # Create train sets.
-        this_x_train = x_train[:size, :]
-        this_y_train = {t_id: y_train[t_id][:size] for t_id in y_train.keys()}
-        
-        expt_name = ('%s-training%d' % (name, size))
-        print task_ids
-        e = Experiment(task_ids = task_ids,
-                       x_train=this_x_train, x_validate=x_validate, x_test=x_test,
-                       y_train=this_y_train, y_validate=y_validate, y_test=y_test,
-                       model_class=LowLevelSharingModel,
-                       expt_name = expt_name,
-                       learning_rate=args.learning_rate,
-                       batch_size=args.batch_size,
-                       num_epochs=args.num_epochs)
-        e.initialize_network()
-        e.train()
+    
+    for name, tasks in to_run.iteritems(): 
+        # Produce the training, validation, and test sets.
+        x_train, x_validate, x_test, y_train, y_validate, y_test, task_ids = fetch_data(tasks)
+
+        for size in training_sizes:
+            # Create train sets.
+            this_x_train = x_train[:size, :]
+            this_y_train = {t_id: y_train[t_id][:size] for t_id in y_train.keys()}
+
+            expt_name = ('%s-training%d' % (name, size))
+            sys.stderr.write('Experiment Name:')
+            sys.stderr.write(str(name) + '\n')
+
+            sys.stderr.write('Experiment Tasks:')
+            sys.stderr.write(str(tasks) + '\n')
+
+            sys.stderr.write('Training Size:')
+            sys.stderr.write(str(size) + '\n')
+            
+            e = Experiment(task_ids = task_ids,
+                           x_train=this_x_train, x_validate=x_validate, x_test=x_test,
+                           y_train=this_y_train, y_validate=y_validate, y_test=y_test,
+                           model_class=LowLevelSharingModel,
+                           expt_name = expt_name,
+                           learning_rate=args.learning_rate,
+                           batch_size=args.batch_size,
+                           num_epochs=args.num_epochs)
+            e.initialize_network()
+            e.train()
