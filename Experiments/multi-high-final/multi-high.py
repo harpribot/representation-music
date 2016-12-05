@@ -48,24 +48,22 @@ if __name__ == '__main__':
         # Produce the training, validation, and test sets.
         x_train, x_validate, x_test, y_train, y_validate, y_test, task_ids = fetch_data(tasks)
         
-        expt_name = ('%s-training%d' % (name, size))
-            
-        sys.stderr.write('Experiment Name:')
-        sys.stderr.write(str(name) + '\n')
-
-        sys.stderr.write('Experiment Tasks:')
-        sys.stderr.write(str(tasks) + '\n')
-
-        sys.stderr.write('Training Size:')
-        sys.stderr.write(str(size) + '\n')
-        
         for size in training_sizes:
             # Create train sets.
             this_x_train = x_train[:size, :]
             this_y_train = {t_id: y_train[t_id][:size] for t_id in y_train.keys()}
         
             expt_name = ('%s-training%d' % (name, size))
-            print task_ids
+            
+            sys.stderr.write('Experiment Name:')
+            sys.stderr.write(str(name) + '\n')
+
+            sys.stderr.write('Experiment Tasks:')
+            sys.stderr.write(str(tasks) + '\n')
+
+            sys.stderr.write('Training Size:')
+            sys.stderr.write(str(size) + '\n')
+            
             e = Experiment(task_ids = task_ids,
                            x_train=this_x_train, x_validate=x_validate, x_test=x_test,
                            y_train=this_y_train, y_validate=y_validate, y_test=y_test,
