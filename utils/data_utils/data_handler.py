@@ -129,8 +129,8 @@ def standardize_labels(train, validate, test, task_ids):
         task_labels = stacked[:, int(task_id)]
         if loss_type is LossTypes.mse:
             task_standardized = preprocessing.scale(task_labels, axis=0)
-        else:
-            task_standardized = task_labels
+        elif loss_type is LossTypes.cross_entropy:
+            task_standardized = task_labels.astype(int)     # Classfication labels must be int
         task_standardized = np.expand_dims(task_standardized, axis=1)
         standardized = np.hstack((standardized, task_standardized))
 
