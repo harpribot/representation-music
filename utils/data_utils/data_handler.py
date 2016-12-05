@@ -125,7 +125,7 @@ def standardize_labels(train, validate, test, task_ids):
 
     # A temporary column of zeros. Will be removed later.
     standardized = np.zeros(num_train + num_validate + num_test).reshape(-1, 1)
-    for task_id, loss_type in task_ids:
+    for task_id, loss_type in task_ids.iteritems():
         task_labels = stacked[:, int(task_id)]
         if loss_type is LossTypes.mse:
             task_standardized = preprocessing.scale(task_labels, axis=0)
