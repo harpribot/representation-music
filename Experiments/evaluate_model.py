@@ -80,8 +80,8 @@ class EvaluateModel(object):
                 errors[task_id] = np.sqrt(self.model.get_layer(task_id + '-loss')
                                           .eval(session=self.sess, feed_dict=feed_dict))
             elif loss_type is LossTypes.cross_entropy:
-                predictions = self.model.get_layer(task_id + '-loss')
-                targets = self.model.get_layer(task_id + '-ground-truth')
+                predictions = tf.argmax(self.model.get_layer(task_id + '-prediction'), 1)
+                targets = tf.argmax(self.model.get_layer(task_id + '-ground-truth'), 1)
                 correct_predictions = tf.equal(predictions, targets)
                 accuracy_tensor = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
                 accuracy = accuracy_tensor.eval(session=self.sess, feed_dict=feed_dict)
