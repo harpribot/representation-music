@@ -83,7 +83,8 @@ class EvaluateModel(object):
                 predictions = self.model.get_layer(task_id + '-loss')
                 targets = self.model.get_layer(task_id + '-ground-truth')
                 correct_predictions = tf.equal(predictions, targets)
-                accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy_tensor = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy = accuracy_tensor.eval(session=self.sess, feed_dict=feed_dict)
                 errors[task_id] = 1. - accuracy
         return errors
 

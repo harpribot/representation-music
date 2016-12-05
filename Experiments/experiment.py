@@ -172,7 +172,8 @@ class Experiment(object):
                 predictions = self.model.get_layer(task_id + '-loss')
                 targets = self.model.get_layer(task_id + '-ground-truth')
                 correct_predictions = tf.equal(predictions, targets)
-                accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy_tensor = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy = accuracy_tensor.eval(session=self.sess, feed_dict=feed_dict)
                 errors[task_id] = 1. - accuracy
         return errors
 
@@ -196,7 +197,8 @@ class Experiment(object):
                 predictions = self.model.get_layer(task_id + '-loss')
                 targets = self.model.get_layer(task_id + '-ground-truth')
                 correct_predictions = tf.equal(predictions, targets)
-                accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy_tensor = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                accuracy = accuracy_tensor.eval(session=self.sess, feed_dict=feed_dict)
                 errors[task_id] = 1. - accuracy
         return errors
 
@@ -206,11 +208,14 @@ class Experiment(object):
 
         return None
         """
-        for task_id in self.task_ids.keys():
+        for task_id, loss_type in self.task_ids.iteritems():
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
             ax.set_xlabel('Number of epochs of training')           
-            ax.set_ylabel('Error')
+            if loss_type is LossTypes.mse:
+                ax.set_ylabel('RMSE Error')
+            elif loss_type is LossTypes.cross_entropy:
+                ax.set_xlabel('(1 - accuracy)')
             plt.plot(x, self.training_errors[task_id], 'r', label='training')
             plt.plot(x, self.validation_errors[task_id], 'b', label='validation')
             plt.legend(loc="best", framealpha=0.3)
