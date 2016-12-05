@@ -28,25 +28,31 @@ class EvaluateModel(object):
         :param model_file: The checkpoint file from which the model should be loaded.
         :param model_class: The :class:`Model` class or any of its child classes.
         """
+        sys.stderr.write("------\n")
         self.sess = tf.Session()
         self.model = model_class(self.task_ids, self.input_dimension, self.output_dimensions)
         self.model.create_model()
         saver = tf.train.Saver()
         saver.restore(self.sess, model_file)
+        sys.stderr.write("------\n")
         sys.stderr.write("Model " + model_file + " loaded.\n")
 
     def load_data(self):
         """
         Loads the test dataset.
         """
+        sys.stderr.write("Loading data.\n")
         _, _, self.x_test, _, _, self.y_test = fetch_data(self.task_ids)
         self.input_dimension = self.x_test.shape[1]
         self.output_dimensions = {task_id: self.y_test[task_id].shape[1] for task_id in self.task_ids.keys()}
+        sys.stderr.write("Test set created.\n")
+
 
     def load_dummy_data(self):
         """
         Loads the dummy test dataset.
         """
+        sys.stderr.write("Loading data.\n")
         task_ids = {'1': LossTypes.mse, '2': LossTypes.mse, '3': LossTypes.cross_entropy}
         self.input_dimension = 5000  # Dimensionality of each training set
         num_inputs_test = 150
@@ -62,6 +68,7 @@ class EvaluateModel(object):
                 labels = np.random.binomial(1, 0.8, num_inputs_test).reshape(1, num_inputs_test)
                 self.y_test[task_id] = convert_to_one_hot(labels)
         self.output_dimensions = {task_id: self.y_test[task_id].shape[1] for task_id in self.task_ids.keys()}
+        sys.stderr.write("Test set created.\n")
 
     def evaluate_model(self):
         """
@@ -101,4 +108,5 @@ if __name__ == '__main__':
     evaluation.load_data()
     evaluation.load_model(model_file, model_class)
     errors = evaluation.evaluate_model()
-    sys.stderr.write(str(errors) + "\n")
+    sys.stderr.write("------\n")
+    sys.stderr.write("Testing Errors: " + str(errors) + "\n")

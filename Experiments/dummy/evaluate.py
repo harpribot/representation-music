@@ -30,7 +30,8 @@ if __name__ == '__main__':
                 '3': LossTypes.cross_entropy}
 
     evaluation = EvaluateModel(task_ids)
-    evaluation.load_data()
+    evaluation.load_dummy_data()
     evaluation.load_model(MODEL_FILE, model_class)
     errors = evaluation.evaluate_model()
-    sys.stderr.write(str(errors) + "\n")
+    sys.stderr.write("------\n")
+    sys.stderr.write("Testing Errors: " + str(errors) + "\n")
