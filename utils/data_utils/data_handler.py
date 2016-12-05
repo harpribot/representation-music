@@ -4,6 +4,7 @@ from utils.data_utils.labels import Labels
 from utils.training_utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_FRACTION, TOTAL_NUM_EXAMPLES
 import numpy as np
 from utils.training_utils.params import EXPT_DIRECTORY_PATH
+from utils.network_utils.params import LossTypes
 import os
 import sys
 
@@ -11,7 +12,7 @@ import sys
 def fetch_data(tasks):
     """
     Fetches the dataset from the Database and then divides it into training / testing / validation data
-    :param task_ids: labels on which the network is trained
+    :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
     :return: split data, and labels
     """
     # Load the data set in memory.
@@ -43,9 +44,26 @@ def fetch_data(tasks):
     db.close()
 
     # Build the label dictionary using tasks under consideration, discarding other labels.
-    y_train = {task_id: np.array(labels_train[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
-    y_val = {task_id: np.array(labels_val[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
-    y_test = {task_id: np.array(labels_test[:, int(task_id)], dtype=float).reshape(-1, 1) for task_id in task_ids}
+    y_train = {}
+    y_val = {}
+    y_test = {}
+    for task_id, loss_type in task_ids.iteritems():
+        if loss_type is LossTypes.mse:
+            y_train[task_id] = np.array(labels_train[:, int(task_id)], dtype=float).reshape(-1, 1)
+            y_val[task_id] = np.array(labels_val[:, int(task_id)], dtype=float).reshape(-1, 1)
+            y_test[task_id] = np.array(labels_test[:, int(task_id)], dtype=float).reshape(-1, 1)
+        elif loss_type is LossTypes.cross_entropy:
+            # Training labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.array(labels_train[:, int(task_id)], dtype=int).reshape(1, -1)
+            y_train[task_id] = convert_to_one_hot(labels)
+
+            # Validation labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.array(labels_val[:, int(task_id)], dtype=int).reshape(1, -1)
+            y_val[task_id] = convert_to_one_hot(labels)
+
+            # Testing labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.array(labels_test[:, int(task_id)], dtype=int).reshape(1, -1)
+            y_test[task_id] = convert_to_one_hot(labels)
 
     return x_train, x_validate, x_test, y_train, y_val, y_test, task_ids
 
@@ -69,3 +87,10 @@ def create_experiment(expt_name):
         os.chdir("./" + expt_dir)  # Change working directory to the newly created folder
         sys.stderr.write("------\n")
         sys.stderr.write("Experiment Directory: " + expt_dir + "\n")
+
+
+def convert_to_one_hot(labels):
+    num_examples = labels.shape[1]
+    one_hot_vectors = np.zeros((num_examples, 2))
+    one_hot_vectors[np.arange(num_examples), labels] = 1
+    return one_hot_vectors

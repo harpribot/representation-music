@@ -1,15 +1,13 @@
 '''
-Evaluate the multi-task model with high-level sharing.
+Evaluate the multi-task model with low-level sharing.
 
 Tasks:
 
--- Hotness
--- Duration
--- Year
+-- The three dummy tasks
 
 Model:
 
--- High Level Sharing Four Hidden Layers
+-- Low Level Sharing Four Hidden Layers
 
 '''
 import os
@@ -17,7 +15,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../..'))
 
 from Experiments.evaluate_model import EvaluateModel
-from Models.high_level_sharing_four_hidden import HighLevelSharingModel
+from Models.low_level_sharing_four_hidden import LowLevelSharingModel
 from utils.data_utils.labels import Labels
 from utils.network_utils.params import LossTypes
 
@@ -26,11 +24,10 @@ from utils.network_utils.params import LossTypes
 MODEL_FILE = ""
 
 if __name__ == '__main__':
-    model_class = HighLevelSharingModel
-    # Labels to be used in the experiment.
-    task_ids = {Labels.hotness.value: LossTypes.mse,
-                Labels.tempo.value: LossTypes.mse,
-                Labels.loudness.value: LossTypes.mse}
+    model_class = LowLevelSharingModel
+    task_ids = {'1': LossTypes.mse,
+                '2': LossTypes.mse,
+                '3': LossTypes.cross_entropy}
 
     evaluation = EvaluateModel(task_ids)
     evaluation.load_data()

@@ -7,7 +7,7 @@ class Model(Layers):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         The model class
-        :param task_ids: List of task identifiers
+        :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
         """

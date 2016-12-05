@@ -1,9 +1,10 @@
 import tensorflow as tf
 
 from activation import leaky_relu, relu
-from loss import mse
+from loss import mse, cross_entropy
 from parameters import bias_variable, weight_variable
 from regularization import batch_norm_layer, dropout_layer
+from utils.network_utils.params import LossTypes
 
 
 class Layers(object):
@@ -147,13 +148,13 @@ class Layers(object):
 
         return layer_id
 
-    def add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type='mse'):
+    def add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type):
         """
         Adds a layer corresponding to the loss function
         :param layer_name: The name of the layer. Type=string
         :param prediction_layer_id: The identifier for the prediction layer
         :param ground_truth_layer_id: The identifier for the ground truth layer
-        :param loss_type: 'mse' for MSE
+        :param loss_type: The loss function to use. Available options defined by LossTypes.
         :return: None
         """
         layer_id = self._get_layer_id(layer_name)
@@ -163,8 +164,10 @@ class Layers(object):
 
         output = self.layers[prediction_layer_id]
         ground_truth = self.layers[ground_truth_layer_id]
-        if loss_type == 'mse':
+        if loss_type == LossTypes.mse:
             self.layers[layer_id] = mse(ground_truth, output)
+        elif loss_type == LossTypes.cross_entropy:
+            self.layers[layer_id] = cross_entropy(ground_truth, output)
         else:
             raise ValueError('The type of loss can only be one of ["mse"]')
 

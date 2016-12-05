@@ -21,14 +21,17 @@ from utils.argument_parser import parse_arguments
 from utils.data_utils.labels import Labels
 from utils.data_utils.data_handler import fetch_data
 from Models.high_level_sharing_four_hidden import HighLevelSharingModel
+from utils.network_utils.params import LossTypes
 
 EXPERIMENT_NAME = "multi-task-high"
 
 if __name__ == '__main__':
     args = parse_arguments()
 
-    # We will predict a single label for this experiment.
-    task_ids = [Labels.hotness.value, Labels.duration.value, Labels.year.value]
+    # Labels to be used in the experiment.
+    task_ids = {Labels.hotness.value: LossTypes.mse,
+                Labels.tempo.value: LossTypes.mse,
+                Labels.loudness.value: LossTypes.mse}
 
     # Produce the training, validation, and testing set.
     x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
