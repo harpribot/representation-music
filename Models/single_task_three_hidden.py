@@ -7,7 +7,7 @@ class SingleTaskThreeHiddenModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A single task model with three hidden layers.
-        :param task_ids: The task ask identifier as a a single-element list
+        :param task_ids: Dictionary of a single task identifiers-loss type pair indexed by task-id.
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by the task identifier.
         """
@@ -25,15 +25,16 @@ class SingleTaskThreeHiddenModel(Model):
         input_layer_id = self.add_input_layer(width=self.input_dimension, layer_name=self.input_id)
 
         is_first = True
-        task_id = self.task_ids[0]
-        sys.stderr.write('Creating network for Task-' + task_id + '\n')
-        self._create_network(task_id, input_layer_id, is_first)
-        # is_first = False
+        for task_id, loss_type in self.task_ids.iteritems():    # Will have only one key-value pair.
+            sys.stderr.write('Creating network for Task-{} with {} loss\n'.format(task_id, loss_type))
+            self._create_network(task_id, loss_type, input_layer_id, is_first)
+            # is_first = False
 
-    def _create_network(self, task_id, input_layer_id, is_first):
+    def _create_network(self, task_id, loss_type, input_layer_id, is_first):
         """
         Create the network
         :param task_id: Task identifier
+        :param loss_type: Type of loss to use -- LossTypes
         :param input_layer_id: The id of the input used for the network
         :param is_first: Boolean which is True if the network is the first one being created.
         :return: None
@@ -96,4 +97,4 @@ class SingleTaskThreeHiddenModel(Model):
         self.add_loss_layer(layer_name='loss',
                             prediction_layer_id=prediction_id,
                             ground_truth_layer_id=groundtruth_id,
-                            loss_type='mse')
+                            loss_type=loss_type)

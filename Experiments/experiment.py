@@ -8,8 +8,9 @@ from dnn.loss import mse
 from dnn.optimizer import Optimizer
 from Models.low_level_sharing_four_hidden import LowLevelSharingModel
 from utils.data_utils.labels import Labels
-from utils.data_utils.data_handler import fetch_data, create_experiment
+from utils.data_utils.data_handler import fetch_data, create_experiment, convert_to_one_hot
 from utils.argument_parser import parse_arguments
+from utils.network_utils.params import LossTypes
 
 
 class Experiment(object):
@@ -17,7 +18,7 @@ class Experiment(object):
                  learning_rate, batch_size, num_epochs):
         """
         Class to run experiments.
-        :param task_ids: List of task identifiers
+        :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
         :param x_train: Training set input
         :param x_validate: Validation set input
         :param x_test: Test set input
@@ -50,7 +51,7 @@ class Experiment(object):
 
         self.input_dimension = self.x_train.shape[1]
         self.train_samples = self.x_train.shape[0]
-        self.output_dimensions = {task_id: self.y_train[task_id].shape[1] for task_id in task_ids}
+        self.output_dimensions = {task_id: self.y_train[task_id].shape[1] for task_id in task_ids.keys()}
         self.model = model_class(task_ids, self.input_dimension, self.output_dimensions)
 
         # Dictionary of list of training errors indexed by task-identifiers. Each list contains errors of the model
@@ -88,7 +89,7 @@ class Experiment(object):
             for minibatch_indices in self._iterate_minibatches(self.batch_size):
                 feed_dict = dict()
                 feed_dict[self.model.get_layer('input')] = self.x_train[minibatch_indices]
-                for id_ in self.task_ids:
+                for id_ in self.task_ids.keys():
                     feed_dict[self.model.get_layer(id_ + '-ground-truth')] = self.y_train[id_][minibatch_indices]
 
                 self.optimizer.run(session=self.sess, feed_dict=feed_dict)
@@ -103,7 +104,7 @@ class Experiment(object):
                              .format(epoch, duration, t_errors, v_errors))
 
             # Add current errors to the cummulative errors list for plotting.
-            for task_id in self.task_ids:
+            for task_id in self.task_ids.keys():
                 self.training_errors[task_id].append(t_errors[task_id])
                 self.validation_errors[task_id].append(v_errors[task_id])
             self._plot_errors()
@@ -117,7 +118,7 @@ class Experiment(object):
         Initialize the dictionaries for training and validation error
         :return: None
         """
-        for task_id in self.task_ids:
+        for task_id in self.task_ids.keys():
             self.training_errors[task_id] = []
             self.validation_errors[task_id] = []
 
@@ -127,7 +128,7 @@ class Experiment(object):
         :return: None
         """
         self.cost = mse(0., 0.)
-        for task_id in self.task_ids:
+        for task_id in self.task_ids.keys():
             self.cost += self.model.get_layer(task_id + '-loss')
 
         opt = Optimizer(self.cost)
@@ -160,11 +161,19 @@ class Experiment(object):
         """
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.x_train
-        for id_ in self.task_ids:
+        for id_ in self.task_ids.keys():
             feed_dict[self.model.get_layer(id_ + '-ground-truth')] = self.y_train[id_]
         errors = {}
-        for task_id in self.task_ids:
-            errors[task_id] = self.model.get_layer(task_id + '-loss').eval(session=self.sess, feed_dict=feed_dict)
+        for task_id, loss_type in self.task_ids.iteritems():
+            if loss_type is LossTypes.mse:
+                errors[task_id] = np.sqrt(self.model.get_layer(task_id + '-loss')
+                                          .eval(session=self.sess, feed_dict=feed_dict))
+            elif loss_type is LossTypes.cross_entropy:
+                predictions = self.model.get_layer(task_id + '-loss')
+                targets = self.model.get_layer(task_id + '-ground-truth')
+                correct_predictions = tf.equal(predictions, targets)
+                accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                errors[task_id] = 1. - accuracy
         return errors
 
     def _validation_errors(self):
@@ -176,11 +185,19 @@ class Experiment(object):
         """
         feed_dict = dict()
         feed_dict[self.model.get_layer('input')] = self.x_validate
-        for id_ in self.task_ids:
+        for id_ in self.task_ids.keys():
             feed_dict[self.model.get_layer(id_ + '-ground-truth')] = self.y_validate[id_]
         errors = {}
-        for task_id in self.task_ids:
-            errors[task_id] = self.model.get_layer(task_id + '-loss').eval(session=self.sess, feed_dict=feed_dict)
+        for task_id, loss_type in self.task_ids.iteritems():
+            if loss_type is LossTypes.mse:
+                errors[task_id] = np.sqrt(self.model.get_layer(task_id + '-loss')
+                                          .eval(session=self.sess, feed_dict=feed_dict))
+            elif loss_type is LossTypes.cross_entropy:
+                predictions = self.model.get_layer(task_id + '-loss')
+                targets = self.model.get_layer(task_id + '-ground-truth')
+                correct_predictions = tf.equal(predictions, targets)
+                accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+                errors[task_id] = 1. - accuracy
         return errors
 
     def _plot_errors(self):
@@ -189,7 +206,7 @@ class Experiment(object):
 
         return None
         """
-        for task_id in self.task_ids:
+        for task_id in self.task_ids.keys():
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
             ax.set_xlabel('Number of epochs of training')           
@@ -208,8 +225,10 @@ def main(args):
     :return: None
     """
 
-    # List of Labels to be used in the experiment.
-    task_ids = [Labels.hotness.value, Labels.tempo.value, Labels.loudness.value]
+    # Labels to be used in the experiment.
+    task_ids = {Labels.hotness.value: LossTypes.mse,
+                Labels.tempo.value: LossTypes.mse,
+                Labels.loudness.value: LossTypes.mse}
 
     # Get the training, validation and testing set data and ground-truths
     x_train, x_validate, x_test, y_train, y_validate, y_test = fetch_data(task_ids)
@@ -231,7 +250,7 @@ def dummy(args):
     :return: None
     """
 
-    task_ids = ['1', '2', '3']
+    task_ids = {'1': LossTypes.mse, '2': LossTypes.mse, '3': LossTypes.cross_entropy}
     input_dimension = 5000  # Dimensionality of each training set
     num_inputs_train = 750
     num_inputs_validate = 100
@@ -239,21 +258,33 @@ def dummy(args):
 
     # Training set
     x_train = np.random.random((num_inputs_train, input_dimension))
-    y_train = {'1': np.random.random((num_inputs_train, 1)),
-               '2': np.random.random((num_inputs_train, 1)),
-               '3': np.random.random((num_inputs_train, 1))}
+    y_train = {}
 
     # Validation set
     x_validate = np.random.random((num_inputs_validate, input_dimension))
-    y_validate = {'1': np.random.random((num_inputs_validate, 1)),
-                  '2': np.random.random((num_inputs_validate, 1)),
-                  '3': np.random.random((num_inputs_validate, 1))}
+    y_validate = {}
 
     # Testing set
     x_test = np.random.random((num_inputs_test, input_dimension))
-    y_test = {'1': np.random.random((num_inputs_test, 1)),
-              '2': np.random.random((num_inputs_test, 1)),
-              '3': np.random.random((num_inputs_test, 1))}
+    y_test = {}
+
+    for task_id, loss_type in task_ids.iteritems():
+        if loss_type is LossTypes.mse:
+            y_train[task_id] = np.random.random((num_inputs_train, 1))
+            y_validate[task_id] = np.random.random((num_inputs_validate, 1))
+            y_test[task_id] = np.random.random((num_inputs_test, 1))
+        elif loss_type is LossTypes.cross_entropy:
+            # Training labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.random.binomial(1, 0.8, num_inputs_train).reshape(1, num_inputs_train)
+            y_train[task_id] = convert_to_one_hot(labels)
+
+            # Validation labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.random.binomial(1, 0.8, num_inputs_validate).reshape(1, num_inputs_validate)
+            y_validate[task_id] = convert_to_one_hot(labels)
+
+            # Testing labels -- 2-dimensional one-hot vectors for each example.
+            labels = np.random.binomial(1, 0.8, num_inputs_test).reshape(1, num_inputs_test)
+            y_test[task_id] = convert_to_one_hot(labels)
 
     exp = Experiment(expt_name="synthetic", task_ids=task_ids, x_train=x_train, x_validate=x_validate,
                      x_test=x_test, y_train=y_train, y_validate=y_validate, y_test=y_test,
