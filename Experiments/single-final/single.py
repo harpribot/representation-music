@@ -30,19 +30,17 @@ if __name__ == '__main__':
     args = parse_arguments()
 
     # Target tasks.
-    task_target = { 'pop' : LossTypes.cross_entropy }
+    target_task = { 'pop' : LossTypes.cross_entropy }
     
-    # Dependent tasks.
-    task_dependent_1 = {'pop rock' : LossTypes.cross_entropy}
-    task_dependent_2 = {'ballad'   : LossTypes.cross_entropy}
-    task_dependent_3 = {'loudness' : LossTypes.mse}
-    task_dependent_4 = {'year'     : LossTypes.mse}
     
-    to_run = { ('%s-target' % (EXPERIMENT_NAME)) : task_target,
-               ('%s-dependent1' % (EXPERIMENT_NAME)) : task_dependent_1,
-               ('%s-dependent2' % (EXPERIMENT_NAME)) : task_dependent_2,
-               ('%s-dependent3' % (EXPERIMENT_NAME)) : task_dependent_3,
-               ('%s-dependent4' % (EXPERIMENT_NAME)) : task_dependent_4}
+    # Dependent tasks
+    dependent_tasks = {'pop rock' : LossTypes.cross_entropy,
+                       'ballad'   : LossTypes.cross_entropy,
+                       'loudness' : LossTypes.mse,
+                       'year'     : LossTypes.mse}
+    
+    to_run = { ('%s-target' % (EXPERIMENT_NAME)) : target_task,
+               ('%s-dependent' % (EXPERIMENT_NAME)) : dependent_tasks}
     
     # These are the training sizes which we will test.
     training_sizes = [500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 25000]
