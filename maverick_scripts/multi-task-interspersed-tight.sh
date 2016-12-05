@@ -8,4 +8,4 @@
 #SBATCH --mail-type=begin              # email me when the job starts
 #SBATCH --mail-type=end                # email me when the job finishes
 
-python ../Experiments/multi-interspersed/multi-task-interspersed.py --task-type 'tightly_coupled'
+python Experiments/multi-interspersed/multi-task-interspersed.py --task-type 'tightly_coupled'

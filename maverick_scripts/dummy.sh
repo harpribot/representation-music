@@ -8,4 +8,4 @@
 #SBATCH --mail-type=begin              # email me when the job starts
 #SBATCH --mail-type=end                # email me when the job finishes
 
-python ../Experiments/dummy/dummy.py --num-epochs 2
+python Experiments/dummy/dummy.py --num-epochs 2

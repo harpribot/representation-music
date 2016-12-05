@@ -8,4 +8,4 @@
 #SBATCH --mail-type=begin              # email me when the job starts
 #SBATCH --mail-type=end                # email me when the job finishes
 
-python ../Experiments/simple/single.py --task-type 'dependent_4'
+python Experiments/simple/single.py --task-type 'dependent_4'
