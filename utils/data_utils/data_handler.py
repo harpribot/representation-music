@@ -27,6 +27,9 @@ def fetch_data(tasks):
     task_ids      = [task_mappings.get(t) for t in task_labels]
     # Recreate input dictionary using integer labels for each task.
     tasks = { str(task_mappings.get(t)) : tasks[t] for t in tasks.keys() }
+    # Print task mappings.
+    for i in range(len(task_ids)):
+        sys.stderr.write('%s : %s\n' % (task_labels[i], task_ids[i]))
 
     sys.stderr.write("------\n")
     # Training set
