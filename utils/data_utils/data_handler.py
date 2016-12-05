@@ -1,12 +1,14 @@
+import os
+import sys
+import numpy as np
+from sklearn import preprocessing
+
 from Data.msd import MillionSongDataset
 from params import FEATURES, LYRICS, LYRIC_MAPPINGS, TRACKS
 from utils.data_utils.labels import Labels
-from utils.training_utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_FRACTION, TOTAL_NUM_EXAMPLES
-import numpy as np
-from utils.training_utils.params import EXPT_DIRECTORY_PATH
 from utils.network_utils.params import LossTypes
-import os
-import sys
+from utils.training_utils.params import TRAIN_FRACTION, TEST_FRACTION, VALIDATE_FRACTION, TOTAL_NUM_EXAMPLES
+from utils.training_utils.params import EXPT_DIRECTORY_PATH
 
 
 def fetch_data(tasks):
@@ -47,6 +49,9 @@ def fetch_data(tasks):
     x_test = np.array([bow for bow in db.get_bow(db.test)], dtype=float)
     labels_test = np.array([t.vector(task_labels) for t in db.get_features(db.test)])
 
+    x_train, x_validate, x_test = standardize_input(x_train, x_validate, x_test)
+    labels_train, labels_val, labels_test = standardize_labels(labels_train, labels_val, labels_test, task_ids)
+
     # Close databases to free memory.
     db.close()
 
@@ -73,6 +78,73 @@ def fetch_data(tasks):
             y_test[task_id] = convert_to_one_hot(labels)
 
     return x_train, x_validate, x_test, y_train, y_val, y_test, tasks
+
+
+def standardize_input(train, validate, test):
+    """
+    Standardizes the input by converting all features to zero-mean, unit-variance
+    :param train: Training input set
+    :param validate: Validation input set
+    :param test: Test input set
+    :return: Standardized train set, Standardized validation set, Standardized test set.
+    """
+    num_train = train.shape[0]
+    num_validate = validate.shape[0]
+    num_test = test.shape[0]
+
+    stacked = np.vstack((num_train, num_validate, num_test))
+    standardized = preprocessing.scale(stacked, axis=0)
+
+    start = 0
+    end = num_train
+    standardized_train = standardized[start: end, :]
+
+    start += end
+    end += num_validate
+    standardized_validate = standardized[start: end, :]
+
+    start += end
+    standardized_test = standardized[start:, :]
+    return standardized_train, standardized_validate, standardized_test
+
+
+def standardize_labels(train, validate, test, task_ids):
+    """
+    Standardizes the labels by converting all real numbered labels to zero-mean, unit-variance
+    :param train: Training label set
+    :param validate: Validation label set
+    :param test: Test label set
+    :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
+    :return: Standardized train set, Standardized validation set, Standardized test set.
+    """
+    num_train = train.shape[0]
+    num_validate = validate.shape[0]
+    num_test = test.shape[0]
+
+    stacked = np.vstack((num_train, num_validate, num_test))
+
+    standardized = np.zeros(num_train + num_validate + num_test).reshape(-1, 1)
+    for task_id, loss_type in task_ids:
+        task_labels = stacked[:, int(task_id)]
+        if loss_type is LossTypes.mse:
+            task_standardized = preprocessing.scale(task_labels, axis=0)
+        else:
+            task_standardized = task_labels
+        standardized = np.hstack((standardized, task_standardized))
+
+    # Remove the stray all-zero first column.
+    standardized = standardized[1:, :]
+    start = 0
+    end = num_train
+    standardized_train = standardized[start: end, :]
+
+    start += end
+    end += num_validate
+    standardized_validate = standardized[start: end, :]
+
+    start += end
+    standardized_test = standardized[start:, :]
+    return standardized_train, standardized_validate, standardized_test
 
 
 def create_experiment(expt_name):
