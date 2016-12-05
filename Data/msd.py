@@ -1,5 +1,18 @@
 import sqlite3
-# import os.path
+import operator
+import numpy as np
+import scipy as sp
+
+TAGS_FILE = 'tags.txt'
+
+def nontag_features():
+    return ['hotttnesss',
+            'duration',
+            'key',
+            'loudness',
+            'year',
+            'time signature',
+            'tempo']
 
 DEFAULT_VALUE = [0.0, 0.0, 0, 0.0, 0, 0, 0.0, [], []]
 class MSFeatures:
@@ -19,49 +32,63 @@ class MSFeatures:
         :param values: The values provided
         """
         self.hotness = values[0]
-        # For some reason, this is not populated in MSD.
-        #self.danceability = values[1]
         self.duration = values[2]
         self.key = values[3]
-        # For some reason, this is not populated in MSD.
-        #self.energy = values[4]
         self.loudness = values[5]
         self.year = values[6]
         self.time_signature = values[7]
         self.tempo = values[8]
         self.tags = values[9]
 
-        # This is all the tags in a list. (A tag is a genre which this song
-        # identifies with.)
+        # For some reason, these are not populated in MSD.
+        #self.danceability = values[1]
+        #self.energy = values[4]
+
+        # This is all the tags in a list. (A tag is a genre for this song)
         self.tagsList = self.tags.split('|')
 
 
+
+    def feature(self, feature):
+        '''
+        Returns an integer or real number representing the queried feature variable.
+        
+        :param feature: Name of the feature.
+        '''
+        if feature == 'hotttnesss':
+            return self.hotness
+        elif feature == 'duration':
+            return self.duration
+        elif feature == 'key':
+            return self.key
+        elif feature == 'loudness':
+            return self.loudness
+        elif feature == 'year':
+            return self.year
+        elif feature == 'time signature':
+            return self.time_signature
+        elif feature == 'tempo':
+            return self.tempo
+        else:
+            return self.isGenre(feature)
+        
+
     def isGenre(self, genre):
         if genre in self.tagsList:
-
-            # True
             return 1
         else:
             return 0
 
 
-    def vector(self, tags=[]):
+    def vector(self, features=[]):
         """
         Returns a feature vector of this song's features.
         :param tags:    List of tags to include as binary features.
         :return:        Vector of features.
         """
-        standard_features = [self.hotness,
-                             self.duration,
-                             self.key,
-                             self.loudness,
-                             self.year,
-                             self.time_signature,
-                             self.tempo]
+        vector = [self.feature(t) for t in tags]
 
-        tag_features = [self.isGenre(t) for t in tags]
-
-        return standard_features + tag_features
+        return vector 
 
 
 class MillionSongFeatureDatabase:
@@ -203,8 +230,6 @@ class MillionSongLyricDatabase:
 
         return bow
 
-
-
     def get_bow_by_msd(self, track_id):
         """
         Returns the BOW for a given MSD track ID, or an array of 0 counts if
@@ -260,6 +285,7 @@ class MillionSongDataset:
     def close(self):
         self._fdb.close()
         self._ldb.close()
+        
 
     def generate_track_list(self):
         """
@@ -327,6 +353,60 @@ class MillionSongDataset:
         self.validate = self.tracks[end_train:end_validate]
         self.test = self.tracks[end_validate:total]
 
+def load_tags():
+    '''
+    Loads music brainz tags from specified tag file and returns them as a list.
+    '''
+    try:
+        return [line.rstrip() for line in open(TAGS_FILE)]
+    except:
+        print ("Failed to load music brainz tags from file.")
+        return []
+        
+
+def correlated_features(data, target_feature, k):
+    '''
+    Given a tag, returns the k most highly correlated features
+    with that tag over the input.
+    
+    :param data:      Input data in form of nparray of MSFeatures objects.
+    :param feature:   String of feature to match.
+    :param k:         Number of results.
+    :return:          String names of k most highly correlated features.
+    '''
+    # Load all tags from file.
+    tags = load_tags()
+
+    # Make sure the feature is valid.
+    if target_feature not in tags:
+        print ("Feature does not exist. Cannot find correlated features.")
+        return np.array([])
+
+    # Remove target feature from list of tags.
+    tags.remove(target_feature)
+
+    # Extract feature array over input data.
+    target_vector = [song.feature(target_feature) for song in data]
+    
+    # Find features which are most highly correlated.
+    all_features = nontag_features()
+    all_features.extend(tags)
+    corrs = {}
+    count = 0
+    for f in all_features:
+        f_vector = [song.feature(f) for song in data]
+        corr = np.corrcoef(np.array([target_vector, f_vector], np.float))[0][1]
+        if np.isnan(corr):
+            corr = 0.0
+        corrs.update({ f : corr })
+        count += 1
+    sorted_corr = sorted(corrs.items(), key=operator.itemgetter(1))
+    for f in list(reversed(sorted_corr)):
+        print f
+
+        
+        
+
 
 if __name__ == '__main__':
     features       = '../Data/msongs.db'
@@ -334,12 +414,13 @@ if __name__ == '__main__':
     lyric_mappings = '../Data/bow.txt'
     tracks         = '../Data/tracks.txt'
     db = MillionSongDataset(features, lyrics, lyric_mappings, tracks)
-    db.generate_split(0.05, 0.15, 0.80, 100)
-    features = [t.vector(['pop', 'pop rock']) for t in db.get_features(db.train)]
-    bow = [bow for bow in db.get_bow(db.train)]
+    db.generate_split(0.05, 0.15, 0.80, 145000)
 
-    for f in features:
-        print f
+    features = [t for t in db.get_features(db.train + db.validate + db.test)]
+    #bow = [bow for bow in db.get_bow(db.train)]
+    
+    correlated_features(features, 'pop', 5)
+
 
 '''    
 # Sample Usage - Load the BOW and features for a single track.
