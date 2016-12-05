@@ -92,7 +92,7 @@ def standardize_input(train, validate, test):
     num_validate = validate.shape[0]
     num_test = test.shape[0]
 
-    stacked = np.vstack((num_train, num_validate, num_test))
+    stacked = np.vstack((train, validate, test))
     standardized = preprocessing.scale(stacked, axis=0)
 
     start = 0
@@ -121,8 +121,9 @@ def standardize_labels(train, validate, test, task_ids):
     num_validate = validate.shape[0]
     num_test = test.shape[0]
 
-    stacked = np.vstack((num_train, num_validate, num_test))
+    stacked = np.vstack((train, validate, test))
 
+    # A temporary column of zeros. Will be removed later.
     standardized = np.zeros(num_train + num_validate + num_test).reshape(-1, 1)
     for task_id, loss_type in task_ids:
         task_labels = stacked[:, int(task_id)]
