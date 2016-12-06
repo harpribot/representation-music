@@ -96,27 +96,45 @@ class Experiment(object):
 
                 duration = int(time.time() - start_time)
 
-            # Evaluate model at the end of each epoch.
-            # Print current errors on training and validation sets.
-            t_errors = self._training_errors()
-            v_errors = self._validation_errors()
-            sys.stderr.write("Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}\n"
-                             .format(epoch, duration, t_errors, v_errors))
+            if epoch % 10 == 0 or epoch == self.num_epochs:
+                # Evaluate model at the end of each epoch.
+                # Print current errors on training and validation sets.
+                t_errors = self._training_errors()
+                v_errors = self._validation_errors()
+                sys.stderr.write("Epoch: {}, Duration: {}, Training Errors: {}, Validation Errors: {}\n"
+                                 .format(epoch, duration, t_errors, v_errors))
 
-            # Add current errors to the cummulative errors list for plotting.
-            for task_id in self.task_ids.keys():
-                self.training_errors[task_id].append(t_errors[task_id])
-                self.validation_errors[task_id].append(v_errors[task_id])
-            self._plot_errors()
 
-            # Checkpoint the model.
-            self.saver.save(self.sess, 'epoch-' + str(epoch).zfill(8))
-            sys.stderr.write("Checkpoint dumped.\n")
+                # Add current errors to the cummulative errors list for plotting.
+                for task_id in self.task_ids.keys():
+                    self.training_errors[task_id].append(t_errors[task_id])
+                    self.validation_errors[task_id].append(v_errors[task_id])
+                self._plot_errors()
+
+                # Checkpoint the model.
+                self.saver.save(self.sess, 'epoch-' + str(epoch).zfill(8))
+                sys.stderr.write("Checkpoint dumped.\n")
+
+                if self._stop():
+                    break
+            else:
+                sys.stderr.write("Epoch: {}, Duration: {}\n"
+                                 .format(epoch, duration))
 
         self._post_training_cleanup()
         sys.stderr.write("------\n")
         sys.stderr.write("Training complete. Logs, outputs, and model saved in " + os.getcwd() + "\n\n\n")
         sys.stderr.write("###################\n\n\n")
+
+    def _stop(self):
+        text = "default"
+        try:
+            fin = open("../../stop", 'r')
+            text = fin.read()
+        except Exception as e:
+            pass
+        finally:
+            return ("stop" in text)
 
     def _initialize_error_dictionaries(self):
         """
