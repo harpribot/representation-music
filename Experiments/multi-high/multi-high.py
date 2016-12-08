@@ -35,7 +35,7 @@ if __name__ == '__main__':
     
     for name, tasks in to_run.iteritems():      
         # Produce the training, validation, and test sets.
-        x_train, x_validate, x_test, y_train, y_valid2352ate, y_test, task_ids = fetch_data(tasks)
+        x_train, x_validate, x_test, y_train, y_validate, y_test, task_ids = fetch_data(tasks)
         
         for size in training_sizes:
             # Create train sets.
