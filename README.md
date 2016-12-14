@@ -29,4 +29,8 @@ If you are using a supercomputing node that accepts SLURM jobs, then run the fol
 ```
 sbatch submission_script.sh
 ```
-else, look into that script and the connecting script to run the experiments. The architecture of experiments and the models is pretty straight forward and highly documented.
+Otherwise, look into that script and the connecting script to run the experiments. The architecture of experiments and the models is pretty straight forward and highly documented.
+
+A dummy experiment on a synthetic dataset with three tasks using a low-level sharing network can be run by invoking ```maverick_scripts/dummy.sh```.
+
+To evaluation a saved model on the test set, run a command similar to the last command in ```maverick_scripts/dummy.sh``` corresponding to the model-type being evaluated.
