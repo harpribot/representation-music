@@ -38,4 +38,4 @@ Otherwise, look into that script and the connecting script to run the experiment
 
 A dummy experiment on a synthetic dataset with three tasks using a low-level sharing network can be run by invoking ```maverick_scripts/dummy.sh```.
 
-To evaluation a saved model on the test set, run a command similar to the last command in ```maverick_scripts/dummy.sh``` corresponding to the model-type being evaluated.
+To evaluate a saved model on the test set, run a command similar to the last command in ```maverick_scripts/dummy.sh``` corresponding to the model-type being evaluated.
