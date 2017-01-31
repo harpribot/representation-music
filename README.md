@@ -13,6 +13,7 @@ This project explores Multi-Task Representation Learning using shared-architectu
  - [Deep Neural Network](#deep-neural-network)
  - [Experimental Results](#experimental-results)
  - [Run Instructions](#run-instructions)
+ - [Report](#report)
  
 ## Dataset
 The dataset can be obtained from [here](http://labrosa.ee.columbia.edu/millionsong) and the correponding paper is cited below.
@@ -39,3 +40,6 @@ Otherwise, look into that script and the connecting script to run the experiment
 A dummy experiment on a synthetic dataset with three tasks using a low-level sharing network can be run by invoking ```maverick_scripts/dummy.sh```.
 
 To evaluate a saved model on the test set, run a command similar to the last command in ```maverick_scripts/dummy.sh``` corresponding to the model-type being evaluated.
+
+## Report
+A write-up for this project is available as `report.pdf`.
