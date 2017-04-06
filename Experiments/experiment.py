@@ -18,6 +18,7 @@ class Experiment(object):
                  learning_rate, batch_size, num_epochs):
         """
         Class to run experiments.
+
         :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
         :param x_train: Training set input
         :param x_validate: Validation set input
@@ -68,6 +69,7 @@ class Experiment(object):
     def initialize_network(self):
         """
         Initializes the DNN network
+
         :return: None
         """
         self.sess = tf.InteractiveSession()
@@ -80,6 +82,7 @@ class Experiment(object):
     def train(self):
         """
         Trains the network
+
         :return: None
         """
         sys.stderr.write("------\n")
@@ -139,6 +142,7 @@ class Experiment(object):
     def _initialize_error_dictionaries(self):
         """
         Initialize the dictionaries for training and validation error
+
         :return: None
         """
         for task_id in self.task_ids.keys():
@@ -148,6 +152,7 @@ class Experiment(object):
     def _initialize_trainer(self):
         """
         Initializes the training optimizer
+
         :return: None
         """
         self.cost = mse(0., 0.)
@@ -234,7 +239,7 @@ class Experiment(object):
         for task_id, loss_type in self.task_ids.iteritems():
             x = np.arange(len(self.training_errors[task_id]))
             fig, ax = plt.subplots(1, 1)
-            ax.set_xlabel('Number of epochs of training')           
+            ax.set_xlabel('Number of epochs of training')
             if loss_type is LossTypes.mse:
                 ax.set_ylabel('RMSE Error')
             elif loss_type is LossTypes.cross_entropy:
@@ -263,6 +268,7 @@ class Experiment(object):
 def main(args):
     """
     Runs the pipeline on the Million Songs Data set.
+
     :param args: Command-line arguments parsed with argparse.
     :return: None
     """
@@ -288,6 +294,7 @@ def main(args):
 def dummy(args):
     """
     Runs the pipeline on a small synthetic dataset.
+    
     :param args: Command line arguments parsed with argpase.
     :return: None
     """
