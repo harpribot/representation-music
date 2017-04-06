@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data package &mdash; RepLearn 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="RepLearn 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-package">
+<h1>Data package<a class="headerlink" href="#data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Data.msd">
+<span id="data-msd-module"></span><h2>Data.msd module<a class="headerlink" href="#module-Data.msd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Data.msd.MSFeatures">
+<em class="property">class </em><code class="descclassname">Data.msd.</code><code class="descname">MSFeatures</code><span class="sig-paren">(</span><em>values=[0.0, 0.0, 0, 0.0, 0, 0, 0.0, [], []]</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MSFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Data.msd.MSFeatures.feature">
+<code class="descname">feature</code><span class="sig-paren">(</span><em>feature</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MSFeatures.feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an integer or real number representing the queried feature variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>feature</strong> &#8211; Name of the feature.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MSFeatures.isGenre">
+<code class="descname">isGenre</code><span class="sig-paren">(</span><em>genre</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MSFeatures.isGenre" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MSFeatures.vector">
+<code class="descname">vector</code><span class="sig-paren">(</span><em>features=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MSFeatures.vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a feature vector of this song&#8217;s features.
+:param tags:    List of tags to include as binary features.
+:return:        Vector of features.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Data.msd.MillionSongDataset">
+<em class="property">class </em><code class="descclassname">Data.msd.</code><code class="descname">MillionSongDataset</code><span class="sig-paren">(</span><em>features</em>, <em>lyrics</em>, <em>lyric_mappings</em>, <em>tracks</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Data.msd.MillionSongDataset.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongDataset.generate_split">
+<code class="descname">generate_split</code><span class="sig-paren">(</span><em>train</em>, <em>validate</em>, <em>test</em>, <em>total=147000</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.generate_split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a train/validate/test split of the data.
+:param train: [0,1] portion used for training
+:param validate: [0,1] portion used for validate
+:param test: [0,1] portion used for test
+:param total: total number of examples used from all 3.
+:return: None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongDataset.generate_track_list">
+<code class="descname">generate_track_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.generate_track_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a list of songs with both full features and lyrics and
+saves to a target file.
+:return: None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongDataset.get_bow">
+<code class="descname">get_bow</code><span class="sig-paren">(</span><em>track_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.get_bow" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>track_ids</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongDataset.get_features">
+<code class="descname">get_features</code><span class="sig-paren">(</span><em>track_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.get_features" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>track_ids</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongDataset.load_track_list">
+<code class="descname">load_track_list</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongDataset.load_track_list" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Data.msd.MillionSongFeatureDatabase">
+<em class="property">class </em><code class="descclassname">Data.msd.</code><code class="descname">MillionSongFeatureDatabase</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Data.msd.MillionSongFeatureDatabase.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongFeatureDatabase.get_features_by_echo">
+<code class="descname">get_features_by_echo</code><span class="sig-paren">(</span><em>echo_id</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase.get_features_by_echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches features for a song by Echo Nest ID.
+:param echo_id: Echo Nest ID
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongFeatureDatabase.get_features_by_msd">
+<code class="descname">get_features_by_msd</code><span class="sig-paren">(</span><em>track_id</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase.get_features_by_msd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches features for a song by MSD ID.
+:param track_id: Million Songs Data set ID
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongFeatureDatabase.get_features_by_msd_list">
+<code class="descname">get_features_by_msd_list</code><span class="sig-paren">(</span><em>track_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase.get_features_by_msd_list" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>track_ids</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongFeatureDatabase.get_songs_with_all_features">
+<code class="descname">get_songs_with_all_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongFeatureDatabase.get_songs_with_all_features" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns a list of MSD IDs for all songs which have all features populated.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Data.msd.MillionSongLyricDatabase">
+<em class="property">class </em><code class="descclassname">Data.msd.</code><code class="descname">MillionSongLyricDatabase</code><span class="sig-paren">(</span><em>db</em>, <em>mappings</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongLyricDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Data.msd.MillionSongLyricDatabase.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongLyricDatabase.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongLyricDatabase.get_bow_by_msd">
+<code class="descname">get_bow_by_msd</code><span class="sig-paren">(</span><em>track_id</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongLyricDatabase.get_bow_by_msd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the BOW for a given MSD track ID, or an array of 0 counts if
+no track with the given ID is found in the database..
+:param track_id:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongLyricDatabase.get_bow_by_msd_batch">
+<code class="descname">get_bow_by_msd_batch</code><span class="sig-paren">(</span><em>track_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongLyricDatabase.get_bow_by_msd_batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Data.msd.MillionSongLyricDatabase.get_songs_with_lyrics">
+<code class="descname">get_songs_with_lyrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.MillionSongLyricDatabase.get_songs_with_lyrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all songs in the lyric database by MSD track ID.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="Data.msd.correlated_features">
+<code class="descclassname">Data.msd.</code><code class="descname">correlated_features</code><span class="sig-paren">(</span><em>data</em>, <em>target_feature</em>, <em>k</em><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.correlated_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a tag, returns the k most highly correlated features
+with that tag over the input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Input data in form of nparray of MSFeatures objects.</li>
+<li><strong>feature</strong> &#8211; String of feature to match.</li>
+<li><strong>k</strong> &#8211; Number of results.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String names of k most highly correlated features.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Data.msd.load_tags">
+<code class="descclassname">Data.msd.</code><code class="descname">load_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.load_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads music brainz tags from specified tag file and returns them as a list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Data.msd.nontag_features">
+<code class="descclassname">Data.msd.</code><code class="descname">nontag_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Data.msd.nontag_features" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-Data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Data" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Data.msd">Data.msd module</a></li>
+<li><a class="reference internal" href="#module-Data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Data.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Harshal Priyadarshi, Shobhit Chaurasia, Tyler McDonell.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Data.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

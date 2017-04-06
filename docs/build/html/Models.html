@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Models package &mdash; RepLearn 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="RepLearn 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="models-package">
+<h1>Models package<a class="headerlink" href="#models-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Models.high_level_sharing_four_hidden">
+<span id="models-high-level-sharing-four-hidden-module"></span><h2>Models.high_level_sharing_four_hidden module<a class="headerlink" href="#module-Models.high_level_sharing_four_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.high_level_sharing_four_hidden.HighLevelSharingModel">
+<em class="property">class </em><code class="descclassname">Models.high_level_sharing_four_hidden.</code><code class="descname">HighLevelSharingModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.high_level_sharing_four_hidden.HighLevelSharingModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.high_level_sharing_four_hidden.HighLevelSharingModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.high_level_sharing_four_hidden.HighLevelSharingModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of several parallel networks. The networks are built one at a time.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.interspersed_sharing_four_hidden">
+<span id="models-interspersed-sharing-four-hidden-module"></span><h2>Models.interspersed_sharing_four_hidden module<a class="headerlink" href="#module-Models.interspersed_sharing_four_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.interspersed_sharing_four_hidden.InterspersedSharingModel">
+<em class="property">class </em><code class="descclassname">Models.interspersed_sharing_four_hidden.</code><code class="descname">InterspersedSharingModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.interspersed_sharing_four_hidden.InterspersedSharingModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.interspersed_sharing_four_hidden.InterspersedSharingModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.interspersed_sharing_four_hidden.InterspersedSharingModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of several parallel networks. The networks are built one at a time.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.low_level_sharing_four_hidden">
+<span id="models-low-level-sharing-four-hidden-module"></span><h2>Models.low_level_sharing_four_hidden module<a class="headerlink" href="#module-Models.low_level_sharing_four_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.low_level_sharing_four_hidden.LowLevelSharingModel">
+<em class="property">class </em><code class="descclassname">Models.low_level_sharing_four_hidden.</code><code class="descname">LowLevelSharingModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.low_level_sharing_four_hidden.LowLevelSharingModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.low_level_sharing_four_hidden.LowLevelSharingModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.low_level_sharing_four_hidden.LowLevelSharingModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of several parallel networks. The networks are built one at a time.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.model">
+<span id="models-model-module"></span><h2>Models.model module<a class="headerlink" href="#module-Models.model" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.model.Model">
+<em class="property">class </em><code class="descclassname">Models.model.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="dnn.html#dnn.layers.Layers" title="dnn.layers.Layers"><code class="xref py py-class docutils literal"><span class="pre">dnn.layers.Layers</span></code></a></p>
+<dl class="method">
+<dt id="Models.model.Model.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.model.Model.create_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.single_task_four_hidden">
+<span id="models-single-task-four-hidden-module"></span><h2>Models.single_task_four_hidden module<a class="headerlink" href="#module-Models.single_task_four_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.single_task_four_hidden.SingleTaskFourHiddenModel">
+<em class="property">class </em><code class="descclassname">Models.single_task_four_hidden.</code><code class="descname">SingleTaskFourHiddenModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_four_hidden.SingleTaskFourHiddenModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.single_task_four_hidden.SingleTaskFourHiddenModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_four_hidden.SingleTaskFourHiddenModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of a single network.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.single_task_three_hidden">
+<span id="models-single-task-three-hidden-module"></span><h2>Models.single_task_three_hidden module<a class="headerlink" href="#module-Models.single_task_three_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.single_task_three_hidden.SingleTaskThreeHiddenModel">
+<em class="property">class </em><code class="descclassname">Models.single_task_three_hidden.</code><code class="descname">SingleTaskThreeHiddenModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_three_hidden.SingleTaskThreeHiddenModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.single_task_three_hidden.SingleTaskThreeHiddenModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_three_hidden.SingleTaskThreeHiddenModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of a single network.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models.single_task_two_hidden">
+<span id="models-single-task-two-hidden-module"></span><h2>Models.single_task_two_hidden module<a class="headerlink" href="#module-Models.single_task_two_hidden" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Models.single_task_two_hidden.SingleTaskTwoHiddenModel">
+<em class="property">class </em><code class="descclassname">Models.single_task_two_hidden.</code><code class="descname">SingleTaskTwoHiddenModel</code><span class="sig-paren">(</span><em>task_ids</em>, <em>input_dimension</em>, <em>output_dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_two_hidden.SingleTaskTwoHiddenModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Models.model.Model" title="Models.model.Model"><code class="xref py py-class docutils literal"><span class="pre">Models.model.Model</span></code></a></p>
+<dl class="method">
+<dt id="Models.single_task_two_hidden.SingleTaskTwoHiddenModel.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Models.single_task_two_hidden.SingleTaskTwoHiddenModel.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the model consisting of a single network.
+:return: None
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Models" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Models package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Models.high_level_sharing_four_hidden">Models.high_level_sharing_four_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models.interspersed_sharing_four_hidden">Models.interspersed_sharing_four_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models.low_level_sharing_four_hidden">Models.low_level_sharing_four_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models.model">Models.model module</a></li>
+<li><a class="reference internal" href="#module-Models.single_task_four_hidden">Models.single_task_four_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models.single_task_three_hidden">Models.single_task_three_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models.single_task_two_hidden">Models.single_task_two_hidden module</a></li>
+<li><a class="reference internal" href="#module-Models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Models.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Harshal Priyadarshi, Shobhit Chaurasia, Tyler McDonell.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Models.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

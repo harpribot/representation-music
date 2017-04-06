@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>utils.data_utils package &mdash; RepLearn 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="RepLearn 1.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="utils-data-utils-package">
+<h1>utils.data_utils package<a class="headerlink" href="#utils-data-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-utils.data_utils.data_handler">
+<span id="utils-data-utils-data-handler-module"></span><h2>utils.data_utils.data_handler module<a class="headerlink" href="#module-utils.data_utils.data_handler" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utils.data_utils.data_handler.convert_to_one_hot">
+<code class="descclassname">utils.data_utils.data_handler.</code><code class="descname">convert_to_one_hot</code><span class="sig-paren">(</span><em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.data_handler.convert_to_one_hot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utils.data_utils.data_handler.create_experiment">
+<code class="descclassname">utils.data_utils.data_handler.</code><code class="descname">create_experiment</code><span class="sig-paren">(</span><em>expt_name</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.data_handler.create_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a directory for this experiment where all the logs and outputs are saved. The directory is named
+after the experiment-name suffixed with a 4-digit random number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expt_name</strong> &#8211; Experiment name.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.data_utils.data_handler.fetch_data">
+<code class="descclassname">utils.data_utils.data_handler.</code><code class="descname">fetch_data</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.data_handler.fetch_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the dataset from the Database and then divides it into training / testing / validation data
+:param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
+:return: split data, and labels</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils.data_utils.labels">
+<span id="utils-data-utils-labels-module"></span><h2>utils.data_utils.labels module<a class="headerlink" href="#module-utils.data_utils.labels" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="utils.data_utils.labels.Labels">
+<em class="property">class </em><code class="descclassname">utils.data_utils.labels.</code><code class="descname">Labels</code><span class="sig-paren">(</span><em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.labels.Labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Given a list of features, assigns each an ID starting at zero.</p>
+<dl class="method">
+<dt id="utils.data_utils.labels.Labels.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.labels.Labels.get" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID associated with a label, or None if there is not one.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils.data_utils.params">
+<span id="utils-data-utils-params-module"></span><h2>utils.data_utils.params module<a class="headerlink" href="#module-utils.data_utils.params" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-utils.data_utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils.data_utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">utils.data_utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-utils.data_utils.data_handler">utils.data_utils.data_handler module</a></li>
+<li><a class="reference internal" href="#module-utils.data_utils.labels">utils.data_utils.labels module</a></li>
+<li><a class="reference internal" href="#module-utils.data_utils.params">utils.data_utils.params module</a></li>
+<li><a class="reference internal" href="#module-utils.data_utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/utils.data_utils.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Harshal Priyadarshi, Shobhit Chaurasia, Tyler McDonell.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/utils.data_utils.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
