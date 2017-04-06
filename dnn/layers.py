@@ -25,6 +25,7 @@ class Layers(object):
     def get_layer(self, layer_id):
         """
         Retuns the tensorflow object corresponding to the requested layer
+
         :param layer_id: Layer identifier
         :return: Tensorflow layer object
         """
@@ -34,6 +35,7 @@ class Layers(object):
     def add_input_layer(self, width, layer_name='input'):
         """
         Adds input layer to the model
+
         :param width: The width of the input = dimension of the input
         :param layer_name: The name of the layer. Type=string
         :return: None
@@ -47,6 +49,7 @@ class Layers(object):
                          layer_name, batch_norm=False, sharing=False):
         """
         Adds the hidden layer to the model
+
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
@@ -75,6 +78,7 @@ class Layers(object):
                                  epsilon=None, dropout_ratio=None):
         """
         Adds the regularization layer to the model
+
         :param input_layer_id: The input layer identifier
         :param layer_name: The name of the layer. Type=string
         :param regularization_type: 'dropout' for Dropout and 'batch_norm' for Batch Normalization. Default = 'dropout'
@@ -102,6 +106,7 @@ class Layers(object):
     def add_output_layer(self, input_layer_id, input_width, output_width, layer_name='output'):
         """
         Adds the output layer to the model
+
         :param input_layer_id: The input layer identifier
         :param input_width: The width of the input for this layer
         :param output_width: The width of the output for this layer
@@ -119,6 +124,7 @@ class Layers(object):
     def add_ground_truth_layer(self, width, layer_name='ground_truth'):
         """
         Adds ground truth layer to the model
+
         :param width: The width of the ground truth = dimension of the input
         :param layer_name: The name of the layer. Type=string
         :return: None
@@ -132,6 +138,7 @@ class Layers(object):
     def add_activation_layer(self, input_layer_id, layer_name, activation_type='relu'):
         """
         Adds the activation layer
+
         :param input_layer_id: The input layer identifier
         :param layer_name: The name of the layer. Type=string
         :param activation_type: 'relu' for RELU and 'leaky-relu' for Leaky RELU. Default = RELU
@@ -151,6 +158,7 @@ class Layers(object):
     def add_loss_layer(self, layer_name, prediction_layer_id, ground_truth_layer_id, loss_type):
         """
         Adds a layer corresponding to the loss function
+
         :param layer_name: The name of the layer. Type=string
         :param prediction_layer_id: The identifier for the prediction layer
         :param ground_truth_layer_id: The identifier for the ground truth layer
@@ -184,6 +192,7 @@ class Layers(object):
     def _layer_verifier(self, layer_id):
         """
         Verifies if the layer asked to be formed is a valid layer and is not already formed before
+        
         :param layer_id: The unique id of the layer. Type=string
         :return: True, if the layer is valid, else False
         """

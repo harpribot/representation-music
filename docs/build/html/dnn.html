@@ -46,18 +46,38 @@
 <dl class="function">
 <dt id="dnn.activation.leaky_relu">
 <code class="descclassname">dnn.activation.</code><code class="descname">leaky_relu</code><span class="sig-paren">(</span><em>features</em>, <em>alpha=0.01</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.activation.leaky_relu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Leaky RELU - Prevents dying neurons due to gradient explosion
-:param features: The input to the RELU layer
-:param alpha: The slope of the negative input values
-:return: relu activation output</p>
+<dd><p>Leaky RELU - Prevents dying neurons due to gradient explosion</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>features</strong> &#8211; The input to the RELU layer</li>
+<li><strong>alpha</strong> &#8211; The slope of the negative input values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">relu activation output</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="dnn.activation.relu">
 <code class="descclassname">dnn.activation.</code><code class="descname">relu</code><span class="sig-paren">(</span><em>features</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.activation.relu" title="Permalink to this definition">¶</a></dt>
-<dd><p>RELU activations
-:param features: The input to the RELU layer
-:return: relu activation output</p>
+<dd><p>RELU activations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>features</strong> &#8211; The input to the RELU layer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">relu activation output</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -70,84 +90,176 @@
 <dl class="method">
 <dt id="dnn.layers.Layers.add_activation_layer">
 <code class="descname">add_activation_layer</code><span class="sig-paren">(</span><em>input_layer_id</em>, <em>layer_name</em>, <em>activation_type='relu'</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_activation_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the activation layer
-:param input_layer_id: The input layer identifier
-:param layer_name: The name of the layer. Type=string
-:param activation_type: &#8216;relu&#8217; for RELU and &#8216;leaky-relu&#8217; for Leaky RELU. Default = RELU
-:return: None</p>
+<dd><p>Adds the activation layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_layer_id</strong> &#8211; The input layer identifier</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+<li><strong>activation_type</strong> &#8211; &#8216;relu&#8217; for RELU and &#8216;leaky-relu&#8217; for Leaky RELU. Default = RELU</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_ground_truth_layer">
 <code class="descname">add_ground_truth_layer</code><span class="sig-paren">(</span><em>width</em>, <em>layer_name='ground_truth'</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_ground_truth_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds ground truth layer to the model
-:param width: The width of the ground truth = dimension of the input
-:param layer_name: The name of the layer. Type=string
-:return: None</p>
+<dd><p>Adds ground truth layer to the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>width</strong> &#8211; The width of the ground truth = dimension of the input</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_hidden_layer">
 <code class="descname">add_hidden_layer</code><span class="sig-paren">(</span><em>input_layer_id</em>, <em>input_width</em>, <em>output_width</em>, <em>layer_name</em>, <em>batch_norm=False</em>, <em>sharing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_hidden_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the hidden layer to the model
-:param input_layer_id: The input layer identifier
-:param input_width: The width of the input for this layer
-:param output_width: The width of the output for this layer
-:param layer_name: The name of the layer. Type=string
-:param batch_norm: True -&gt; if next layer is a batch normalization layer, else False. Default= False
-:param sharing: True, if the layer is shared, else False.. Default=False
-:return: None</p>
+<dd><p>Adds the hidden layer to the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_layer_id</strong> &#8211; The input layer identifier</li>
+<li><strong>input_width</strong> &#8211; The width of the input for this layer</li>
+<li><strong>output_width</strong> &#8211; The width of the output for this layer</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+<li><strong>batch_norm</strong> &#8211; True -&gt; if next layer is a batch normalization layer, else False. Default= False</li>
+<li><strong>sharing</strong> &#8211; True, if the layer is shared, else False.. Default=False</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_input_layer">
 <code class="descname">add_input_layer</code><span class="sig-paren">(</span><em>width</em>, <em>layer_name='input'</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_input_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds input layer to the model
-:param width: The width of the input = dimension of the input
-:param layer_name: The name of the layer. Type=string
-:return: None</p>
+<dd><p>Adds input layer to the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>width</strong> &#8211; The width of the input = dimension of the input</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_loss_layer">
 <code class="descname">add_loss_layer</code><span class="sig-paren">(</span><em>layer_name</em>, <em>prediction_layer_id</em>, <em>ground_truth_layer_id</em>, <em>loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_loss_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a layer corresponding to the loss function
-:param layer_name: The name of the layer. Type=string
-:param prediction_layer_id: The identifier for the prediction layer
-:param ground_truth_layer_id: The identifier for the ground truth layer
-:param loss_type: The loss function to use. Available options defined by LossTypes.
-:return: None</p>
+<dd><p>Adds a layer corresponding to the loss function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+<li><strong>prediction_layer_id</strong> &#8211; The identifier for the prediction layer</li>
+<li><strong>ground_truth_layer_id</strong> &#8211; The identifier for the ground truth layer</li>
+<li><strong>loss_type</strong> &#8211; The loss function to use. Available options defined by LossTypes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_output_layer">
 <code class="descname">add_output_layer</code><span class="sig-paren">(</span><em>input_layer_id</em>, <em>input_width</em>, <em>output_width</em>, <em>layer_name='output'</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_output_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the output layer to the model
-:param input_layer_id: The input layer identifier
-:param input_width: The width of the input for this layer
-:param output_width: The width of the output for this layer
-:param layer_name: The name of the layer. Type=string
-:return: None</p>
+<dd><p>Adds the output layer to the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_layer_id</strong> &#8211; The input layer identifier</li>
+<li><strong>input_width</strong> &#8211; The width of the input for this layer</li>
+<li><strong>output_width</strong> &#8211; The width of the output for this layer</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.add_regularization_layer">
 <code class="descname">add_regularization_layer</code><span class="sig-paren">(</span><em>input_layer_id</em>, <em>layer_name</em>, <em>regularization_type='dropout'</em>, <em>epsilon=None</em>, <em>dropout_ratio=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.add_regularization_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the regularization layer to the model
-:param input_layer_id: The input layer identifier
-:param layer_name: The name of the layer. Type=string
-:param regularization_type: &#8216;dropout&#8217; for Dropout and &#8216;batch_norm&#8217; for Batch Normalization. Default = &#8216;dropout&#8217;
-:param epsilon: The batch_norm parameter to ensure that division is not by zero when variance of batch = 0
-:param dropout_ratio: The fraction of the layers to be masked.
-:return: None</p>
+<dd><p>Adds the regularization layer to the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_layer_id</strong> &#8211; The input layer identifier</li>
+<li><strong>layer_name</strong> &#8211; The name of the layer. Type=string</li>
+<li><strong>regularization_type</strong> &#8211; &#8216;dropout&#8217; for Dropout and &#8216;batch_norm&#8217; for Batch Normalization. Default = &#8216;dropout&#8217;</li>
+<li><strong>epsilon</strong> &#8211; The batch_norm parameter to ensure that division is not by zero when variance of batch = 0</li>
+<li><strong>dropout_ratio</strong> &#8211; The fraction of the layers to be masked.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.layers.Layers.get_layer">
 <code class="descname">get_layer</code><span class="sig-paren">(</span><em>layer_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.layers.Layers.get_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retuns the tensorflow object corresponding to the requested layer
-:param layer_id: Layer identifier
-:return: Tensorflow layer object</p>
+<dd><p>Retuns the tensorflow object corresponding to the requested layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layer_id</strong> &#8211; Layer identifier</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tensorflow layer object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -168,19 +280,43 @@
 <dl class="function">
 <dt id="dnn.loss.cross_entropy">
 <code class="descclassname">dnn.loss.</code><code class="descname">cross_entropy</code><span class="sig-paren">(</span><em>ground_truth</em>, <em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.loss.cross_entropy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Cross-Entropy loss container
-:param ground_truth: The ground truth layer
-:param output: The network output layer
-:return: Cross-entropy error</p>
+<dd><p>Returns the Cross-Entropy loss container</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ground_truth</strong> &#8211; The ground truth layer</li>
+<li><strong>output</strong> &#8211; The network output layer</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Cross-entropy error</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="dnn.loss.mse">
 <code class="descclassname">dnn.loss.</code><code class="descname">mse</code><span class="sig-paren">(</span><em>ground_truth</em>, <em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.loss.mse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Mean Squared Error loss container
-:param ground_truth: The ground truth layer
-:param output: The network output layer
-:return: MSE error</p>
+<dd><p>Returns the Mean Squared Error loss container</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ground_truth</strong> &#8211; The ground truth layer</li>
+<li><strong>output</strong> &#8211; The network output layer</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">MSE error</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -193,34 +329,70 @@
 <dl class="method">
 <dt id="dnn.optimizer.Optimizer.get_ada_delta">
 <code class="descname">get_ada_delta</code><span class="sig-paren">(</span><em>learning_rate</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.optimizer.Optimizer.get_ada_delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ada Delta Optimizer
-:param learning_rate: The learning rate
-:return: the optimizer</p>
+<dd><p>Ada Delta Optimizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>learning_rate</strong> &#8211; The learning rate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the optimizer</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.optimizer.Optimizer.get_adagrad">
 <code class="descname">get_adagrad</code><span class="sig-paren">(</span><em>learning_rate</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.optimizer.Optimizer.get_adagrad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adagrad optimizer
-:param learning_rate: The learning rate
-:return: the optimizer</p>
+<dd><p>Adagrad optimizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>learning_rate</strong> &#8211; The learning rate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the optimizer</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.optimizer.Optimizer.get_adam">
 <code class="descname">get_adam</code><span class="sig-paren">(</span><em>learning_rate</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.optimizer.Optimizer.get_adam" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adam optimizer
-:param learning_rate: The learning rate
-:return: the optimizer</p>
+<dd><p>Adam optimizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>learning_rate</strong> &#8211; The learning rate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the optimizer</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="dnn.optimizer.Optimizer.get_momentum">
 <code class="descname">get_momentum</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>momentum</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.optimizer.Optimizer.get_momentum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Momentum optimizer
-:param learning_rate: The learning rate
-:param momentum: The momentum parameter for the optimizer
-:return: the optimizer</p>
+<dd><p>Momentum optimizer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>learning_rate</strong> &#8211; The learning rate</li>
+<li><strong>momentum</strong> &#8211; The momentum parameter for the optimizer</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the optimizer</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -231,19 +403,43 @@
 <dl class="function">
 <dt id="dnn.parameters.bias_variable">
 <code class="descclassname">dnn.parameters.</code><code class="descname">bias_variable</code><span class="sig-paren">(</span><em>shape</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.parameters.bias_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>This creates the bias placeholder for the DNN layers
-:param shape: shape of the bias variable
-:param scope: scope of the bias variable
-:return: The tensorflow placeholder for the bias</p>
+<dd><p>This creates the bias placeholder for the DNN layers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; shape of the bias variable</li>
+<li><strong>scope</strong> &#8211; scope of the bias variable</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The tensorflow placeholder for the bias</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="dnn.parameters.weight_variable">
 <code class="descclassname">dnn.parameters.</code><code class="descname">weight_variable</code><span class="sig-paren">(</span><em>shape</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.parameters.weight_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>This creates the weight placeholder for the DNN layers
-:param shape: shape of the weight variable
-:param scope: scope of the weight variable
-:return: The tensorflow placeholder for weights</p>
+<dd><p>This creates the weight placeholder for the DNN layers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; shape of the weight variable</li>
+<li><strong>scope</strong> &#8211; scope of the weight variable</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The tensorflow placeholder for weights</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -274,10 +470,22 @@
 <dl class="function">
 <dt id="dnn.regularization.dropout_layer">
 <code class="descclassname">dnn.regularization.</code><code class="descname">dropout_layer</code><span class="sig-paren">(</span><em>input_layer</em>, <em>dropout_ratio=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#dnn.regularization.dropout_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Forms a dropout layer
-:param input_layer: The layer on which the dropout is to be applied
-:param dropout_ratio: The ratio of the dropout that is to be applied
-:return: The dropout layer</p>
+<dd><p>Forms a dropout layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_layer</strong> &#8211; The layer on which the dropout is to be applied</li>
+<li><strong>dropout_ratio</strong> &#8211; The ratio of the dropout that is to be applied</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The dropout layer</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

@@ -12,6 +12,7 @@ import sys
 def fetch_data(tasks):
     """
     Fetches the dataset from the Database and then divides it into training / testing / validation data
+
     :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
     :return: split data, and labels
     """
@@ -97,6 +98,12 @@ def create_experiment(expt_name):
 
 
 def convert_to_one_hot(labels):
+    """
+    Converts the integer label to one hot representation
+
+    :param labels: The integer label
+    :return: One hot representation of the integer label
+    """
     num_examples = labels.shape[1]
     one_hot_vectors = np.zeros((num_examples, 2))
     one_hot_vectors[np.arange(num_examples), labels] = 1

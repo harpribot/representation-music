@@ -46,7 +46,18 @@
 <dl class="function">
 <dt id="utils.data_utils.data_handler.convert_to_one_hot">
 <code class="descclassname">utils.data_utils.data_handler.</code><code class="descname">convert_to_one_hot</code><span class="sig-paren">(</span><em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.data_handler.convert_to_one_hot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts the integer label to one hot representation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>labels</strong> &#8211; The integer label</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">One hot representation of the integer label</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="utils.data_utils.data_handler.create_experiment">
@@ -68,9 +79,17 @@ after the experiment-name suffixed with a 4-digit random number.</p>
 <dl class="function">
 <dt id="utils.data_utils.data_handler.fetch_data">
 <code class="descclassname">utils.data_utils.data_handler.</code><code class="descname">fetch_data</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#utils.data_utils.data_handler.fetch_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches the dataset from the Database and then divides it into training / testing / validation data
-:param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
-:return: split data, and labels</p>
+<dd><p>Fetches the dataset from the Database and then divides it into training / testing / validation data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_ids</strong> &#8211; Dictionary of task identifiers-loss type pairs indexed by task-id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">split data, and labels</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

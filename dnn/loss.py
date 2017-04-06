@@ -4,6 +4,7 @@ import tensorflow as tf
 def mse(ground_truth, output):
     """
     Returns the Mean Squared Error loss container
+
     :param ground_truth: The ground truth layer
     :param output: The network output layer
     :return: MSE error
@@ -15,6 +16,7 @@ def mse(ground_truth, output):
 def cross_entropy(ground_truth, output):
     """
     Returns the Cross-Entropy loss container
+    
     :param ground_truth: The ground truth layer
     :param output: The network output layer
     :return: Cross-entropy error

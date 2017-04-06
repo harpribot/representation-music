@@ -7,6 +7,7 @@ class SingleTaskFourHiddenModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A single task model with four hidden layers.
+
         :param task_ids: Dictionary of a single task identifiers-loss type pair indexed by task-id.
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by the task identifier.
@@ -18,7 +19,7 @@ class SingleTaskFourHiddenModel(Model):
     def create_model(self):
         """
         Creates the model consisting of a single network.
-        :return: None
+
         :return: None
         """
         # print 'Adding Input Layer'

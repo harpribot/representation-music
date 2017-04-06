@@ -7,6 +7,7 @@ class SingleTaskTwoHiddenModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A single task model with two hidden layers.
+
         :param task_ids: Dictionary of a single task identifiers-loss type pair indexed by task-id.
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by the task identifier.
@@ -18,7 +19,7 @@ class SingleTaskTwoHiddenModel(Model):
     def create_model(self):
         """
         Creates the model consisting of a single network.
-        :return: None
+
         :return: None
         """
         # print 'Adding Input Layer'
@@ -33,6 +34,7 @@ class SingleTaskTwoHiddenModel(Model):
     def _create_network(self, task_id, loss_type, input_layer_id, is_first):
         """
         Create the network
+
         :param task_id: Task identifier
         :param loss_type: Type of loss to use -- LossTypes
         :param input_layer_id: The id of the input used for the network

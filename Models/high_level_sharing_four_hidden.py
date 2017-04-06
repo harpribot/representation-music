@@ -7,6 +7,7 @@ class HighLevelSharingModel(Model):
     def __init__(self, task_ids, input_dimension, output_dimensions):
         """
         A high level sharing model with four hidden layers.
+
         :param task_ids: Dictionary of task identifiers-loss type pairs indexed by task-id.
         :param input_dimension: Input dimension
         :param output_dimensions: Dictionary of output dimensions indexed by task identifiers
@@ -16,7 +17,7 @@ class HighLevelSharingModel(Model):
     def create_model(self):
         """
         Creates the model consisting of several parallel networks. The networks are built one at a time.
-        :return: None
+
         :return: None
         """
         # print 'Adding Input Layer'
@@ -31,6 +32,7 @@ class HighLevelSharingModel(Model):
     def _create_network(self, task_id, loss_type, input_layer_id, is_first):
         """
         Create each network
+        
         :param task_id: Task identifier
         :param loss_type: Type of loss to use -- LossTypes
         :param input_layer_id: The id of the input used for the network

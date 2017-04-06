@@ -4,6 +4,7 @@ import tensorflow as tf
 def dropout_layer(input_layer, dropout_ratio=0.5):
     """
     Forms a dropout layer
+    
     :param input_layer: The layer on which the dropout is to be applied
     :param dropout_ratio: The ratio of the dropout that is to be applied
     :return: The dropout layer
